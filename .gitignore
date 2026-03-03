@@ -10,3 +10,7 @@ node_modules/
 .DS_Store
 .env
 agents/main/sessions/
+openclaw.json
+openclaw.json.bak
+openclaw.json.bak.*
+config/mcporter.json
