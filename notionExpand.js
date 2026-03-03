@@ -1,0 +1,87 @@
+// expand_and_update_ticket.js
+const { Client } = require("@notionhq/client");
+
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+function getTitle(page) {
+  const t = page.properties?.["Tarea"]?.title || [];
+  return t.map(x => x.plain_text).join("").trim();
+}
+
+function getRichText(page, propName) {
+  const rt = page.properties?.[propName]?.rich_text || [];
+  return rt.map(x => x.plain_text).join("").trim();
+}
+
+function getMultiSelect(page, propName) {
+  const ms = page.properties?.[propName]?.multi_select || [];
+  return ms.map(x => x.name).join(", ");
+}
+
+// Notion limita el tamaño por bloque; esto lo parte en chunks seguros
+function toRichTextChunks(text, chunkSize = 1800) {
+  const chunks = [];
+  for (let i = 0; i < text.length; i += chunkSize) {
+    chunks.push(text.slice(i, i + chunkSize));
+  }
+  return chunks.map((c) => ({ text: { content: c } }));
+}
+
+// 👇 Reemplazá esto por TU llamada real a OpenClaw (tu wrapper actual)
+async function openclawExpand(prompt) {
+  // Ejemplo: return await openclaw.generate(prompt)
+  // Acá poné el método que ya usás en tu daemon/bot.
+  throw new Error("TODO: conectar a OpenClaw acá");
+}
+
+async function expandAndUpdateTicket(pageId) {
+  // 1) Leer page
+  const page = await notion.pages.retrieve({ page_id: pageId });
+
+  const title = getTitle(page);
+  const description = getRichText(page, "Descripción");
+  const type = getMultiSelect(page, "Etiquetas");
+
+  const prompt = `
+Act as a senior full-stack architect.
+
+Expand the following backlog item technically.
+
+Title:
+${title}
+
+Type:
+${type}
+
+Description:
+${description}
+
+Return:
+1. Technical Analysis
+2. Impact (DB / API / UI)
+3. Implementation Steps
+4. Risks
+5. Suggested Tests
+6. Breaking Change? (Yes/No + Why)
+`.trim();
+
+  // 2) Expandir con OpenClaw
+  const expansion = await openclawExpand(prompt);
+
+  // 3) Actualizar Notion: Technical Expansion + Estado=Expanded
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      "Technical Expansion": {
+        rich_text: toRichTextChunks(expansion),
+      },
+      "Estado": {
+        select: { name: "Expanded" },
+      },
+    },
+  });
+
+  return { ok: true, title };
+}
+
+module.exports = { expandAndUpdateTicket };

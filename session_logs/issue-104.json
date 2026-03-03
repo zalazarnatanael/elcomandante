@@ -1,0 +1,54 @@
+{
+  "issueNumber": 104,
+  "lastCommentId": 3992082469,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T16:07:00.977Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:08:03.121Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Tu ferreteria de confianza”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:10:07.266Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “VAMOS AL CAMPING”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:11:44.309Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “VAMOS AL CAMPING”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:13:15.758Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “vamos lanus”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:13:29.944Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “vamos lanus”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:13:58.772Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “vamos lanus”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    }
+  ],
+  "feedback": [
+    {
+      "id": 3992049730,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T16:07:48Z",
+      "body": "Pone mejor \"Tu ferreteria de confianza\""
+    },
+    {
+      "id": 3992060324,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T16:09:40Z",
+      "body": "pone \" VAMOS AL CAMPING\""
+    },
+    {
+      "id": 3992079971,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T16:13:05Z",
+      "body": "Pone en el titulo \"vamos lanus\""
+    }
+  ]
+}

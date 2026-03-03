@@ -1,0 +1,128 @@
+{
+  "issueNumber": 102,
+  "lastCommentId": 3992022212,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T15:36:06.975Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:42:32.578Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Que grande el PM”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:50:13.842Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Cebamo un mate”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:51:36.067Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Cebamo un mate daniel”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:52:04.479Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “El futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:56:14.685Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Hola daniel”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:59:28.447Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “Hola daniel axel pecora”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T15:59:54.855Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “el futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:00:07.857Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “el futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:02:48.280Z",
+      "body": "Necesito el texto final exacto del título.  \n¿Querés cambiar “6 empanadas?” por cuál frase? (Recomendado: “el futuro es hoy”.)"
+    },
+    {
+      "createdAt": "2026-03-03T16:03:16.819Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “el futuro es hoy” (recomendado; ajustar si confirman otro texto).\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T16:04:26.812Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “el futuro es hoy” (feedback más reciente).\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    }
+  ],
+  "feedback": [
+    {
+      "id": 3991893421,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:42:16Z",
+      "body": "Me gustaria que puedas cambiar a \"Que grande el PM\""
+    },
+    {
+      "id": 3991921797,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:46:48Z",
+      "body": "Cambiemos el texto a \"Cebamo un mate\""
+    },
+    {
+      "id": 3991938600,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:49:34Z",
+      "body": "Cambiemos el texto a \"Cebamo un mate\"\n\n"
+    },
+    {
+      "id": 3991941242,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:50:01Z",
+      "body": "Cambiemos el texto a \"Cebamo un mate\"\n\n"
+    },
+    {
+      "id": 3991949140,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:51:22Z",
+      "body": "Cambiemos el texto a \"Cebamo un mate daniel\"\n\n"
+    },
+    {
+      "id": 3991952054,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:51:52Z",
+      "body": "Cambia el titulo a \"El futuro es hoy\""
+    },
+    {
+      "id": 3991969592,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:54:48Z",
+      "body": "Cambia el texto a \"Hola daniel\""
+    },
+    {
+      "id": 3991979152,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:56:27Z",
+      "body": "Cambia el texto a \"Hola daniel axel\"\n\n"
+    },
+    {
+      "id": 3991996599,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:59:18Z",
+      "body": "Cambia el texto a \"Hola daniel axel pecora\" \n\n"
+    },
+    {
+      "id": 3991999322,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:59:44Z",
+      "body": "Pone mejor \"el futuro es hoy\""
+    },
+    {
+      "id": 3992017551,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T16:02:37Z",
+      "body": "Cambia el titulo de \"6 empanadas?\""
+    },
+    {
+      "id": 3992018994,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-03T16:02:48Z",
+      "body": "Necesito el texto final exacto del título.  \n¿Querés cambiar “6 empanadas?” por cuál frase? (Recomendado: “el futuro es hoy”.)"
+    }
+  ]
+}

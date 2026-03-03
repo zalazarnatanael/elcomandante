@@ -1,0 +1,23 @@
+
+
+--- EXECUTION 2026-03-03T13:05:08.328Z ---
+PROMPT: Analiza: Cambiar titulo del home a “AGUANTE LANUS”. Descripción: **Detalles y Adjuntos:**
+
+![Screenshot_2026-03-03_at_10.01.24.png](http://69.6.227.244:3000/uploads/notion_72a65a5167e825ea288abd6ae8960b4f.png)
+
+
+
+. Genera un ### 📋 Plan de Implementación.
+
+RESULT:
+[0m
+> build · gpt-5.2-codex
+[0m
+### 📋 Plan de Implementación
+
+- Ubicar el título del home en `app/page.tsx` y confirmar si también hay metadata (`export const metadata`) o head dinámico.
+- Actualizar el texto visible del título principal a “AGUANTE LANUS”.
+- Si el título se refleja en metadata o en componentes reutilizados, ajustar esas referencias para mantener consistencia.
+- Verificar que no haya otros títulos duplicados en secciones del home que deban mantenerse.
+- Validar que el render del home muestre el nuevo título.
+

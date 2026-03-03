@@ -1,0 +1,50 @@
+{
+  "issueNumber": 108,
+  "lastCommentId": 3993134619,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T18:31:58.435Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    },
+    {
+      "createdAt": "2026-03-03T18:39:22.751Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    },
+    {
+      "createdAt": "2026-03-03T19:05:44.189Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    },
+    {
+      "createdAt": "2026-03-03T19:06:15.105Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    },
+    {
+      "createdAt": "2026-03-03T19:42:08.235Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    },
+    {
+      "createdAt": "2026-03-03T19:44:40.131Z",
+      "body": "### 📋 Plan\n- Revisar el flujo actual de presupuestos en el POS (`components/pos/*`, `app/admin/pos/page.tsx`) para ubicar dónde se crea y dónde se busca.\n- Incorporar creación de presupuesto desde el punto de venta: agregar productos en el sidebar, generar presupuesto y mostrar código.\n- Ajustar búsqueda por productos en POS para que con las primeras letras devuelva todas las coincidencias (autocompletar/búsqueda incremental).\n- Agregar búsqueda de presupuesto por código en el POS y asegurar que sea accesible desde el sidebar.\n- Definir y aplicar duración del presupuesto (2 días) en la lógica de creación/validación (API/acciones).\n- Actualizar UI/copy para mostrar una etiqueta visible de “Punto de venta” en el sidebar.\n- Validar el flujo completo: alta de presupuesto desde vendedor, búsqueda por código, y expiración por duración."
+    }
+  ],
+  "feedback": [
+    {
+      "id": 3992983713,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T19:05:29Z",
+      "body": "Podemos continuar resolviendo?"
+    },
+    {
+      "id": 3992991024,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-03T19:07:26Z",
+      "body": "❌ No pude continuar en **PLAN** por autenticación inválida o expirada (status 403). (request_id: CB86:34A25E:171A03B:198EA77:69A7316D)\nRevisar `GITHUB_TOKEN` del bot."
+    },
+    {
+      "id": 3993133787,
+      "author": "Dato414",
+      "createdAt": "2026-03-03T19:41:56Z",
+      "body": "podemos resolverlo ? "
+    }
+  ]
+}

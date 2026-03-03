@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@notionhq/client": "^5.11.0",
+    "@octokit/rest": "^22.0.1",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "notion-to-md": "^3.1.9",
+    "openai": "^6.25.0",
+    "simple-git": "^3.32.3"
+  }
+}

@@ -1,0 +1,10 @@
+- [2026-03-02] Issue #68: Se actualizaron `app/api/budgets/route.ts` y `components/pos/quote-history.tsx`,  añadiendo nueva lógica para edición y eliminación de presupuestos.
+--- 
+Si necesitas más detalles o ajustes específicos en el reporte, házmelo saber.
+- [2026-03-03] Issue #68 completado: Actualizar funcionalidad en buscador de presupuesto
+- [2026-03-03] Issue #68 completado: Actualizar funcionalidad en buscador de presupuesto
+- [2026-03-03] Issue #70 completado: Hacer funcionar customers
+- [2026-03-03] Issue #70 completado: Hacer funcionar customers
+- [2026-03-03] Issue #70: Hacer funcionar customers
+- [2026-03-03] Issue #70: Hacer funcionar customers
+- [2026-03-03] Issue #70: Hacer funcionar customers

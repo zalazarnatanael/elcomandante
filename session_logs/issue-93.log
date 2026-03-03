@@ -1,0 +1,24 @@
+
+
+--- EXEC: 2026-03-03T14:58:00.751Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+### 📋 Plan
+
+- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.
+- Reemplazar el texto del título por “El futuro es hoy”.
+- Verificar que no existan otros títulos del home que deban mantenerse sin cambios.
+- Confirmar que el home renderice el nuevo título correctamente.
+
+
+
+--- EXEC: 2026-03-03T14:58:34.122Z ---
+[93m[1m! [0m agent "programmer" not found. Falling back to default agent
+[0m
+> build · gpt-5.2-codex
+[0m
+[0m⚙ [0mapply_patch Success. Updated the following files:
+M components/landing/hero-section.tsx
+Listo.
+

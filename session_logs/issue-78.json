@@ -1,0 +1,18 @@
+{
+  "issueNumber": 78,
+  "lastCommentId": 3991809997,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T15:28:36.964Z",
+      "body": "### 📋 Plan Mejorado\n- Confirmar el texto final del título y el alcance (solo home visible vs metadata/SEO).\n- Ubicar el título visible en `components/landing/hero-section.tsx` y cualquier metadata en `app/page.tsx`/`app/layout.tsx`.\n- Actualizar el texto del título y, si aplica, el metadata para mantener consistencia.\n- Revisar enlaces/anclas que puedan depender del texto (no debería, pero verificar).\n- Validar render en home y revisar que no haya otros títulos duplicados o inconsistentes."
+    }
+  ],
+  "feedback": [
+    {
+      "id": 3991809997,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-03T15:28:18Z",
+      "body": "Tirame un mejor plan"
+    }
+  ]
+}

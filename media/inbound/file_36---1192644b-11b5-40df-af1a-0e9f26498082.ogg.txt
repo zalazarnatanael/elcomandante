@@ -1,0 +1,1 @@
+¿Hay alguna manera de que yo te pueda pasar contexto de toda la aplicación para cuando cree tickets en Notion puedas leerlos al contexto para estar más acertado con la expansión? ¿Eso lo podremos hacer?

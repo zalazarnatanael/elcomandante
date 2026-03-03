@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "skills": {
+    "mcporter": {
+      "source": "openclaw/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/openclaw/skills.git",
+      "skillPath": "skills/oristides/water-coach/skills/mcporter/SKILL.md",
+      "skillFolderHash": "",
+      "installedAt": "2026-02-28T17:41:19.410Z",
+      "updatedAt": "2026-02-28T17:41:19.410Z"
+    }
+  },
+  "dismissed": {}
+}

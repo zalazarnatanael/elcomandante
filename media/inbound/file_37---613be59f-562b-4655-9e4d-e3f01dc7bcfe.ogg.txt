@@ -1,0 +1,1 @@
+Bien, después voy a crear la página de contexto de FiveFax. ¿Podrías modificar el cron para que se ejecute cada media hora?

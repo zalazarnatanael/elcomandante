@@ -1,0 +1,26 @@
+
+
+--- EXEC: 2026-03-03T13:30:02.358Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+### 📋 Plan
+
+- Revisar `app/page.tsx` y `components/landing/hero-section.tsx` para ubicar el título visible del home.
+- Reemplazar el texto del título por “AGUANTE LANUS”.
+- Verificar que no existan otros títulos del home que deban mantenerse sin cambios.
+- Confirmar que el home renderice el nuevo título correctamente.
+
+
+
+--- EXEC: 2026-03-03T13:30:13.863Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+### 📋 Plan
+
+- Revisar `app/page.tsx` y `components/landing/hero-section.tsx` para ubicar el título visible del home.
+- Reemplazar el texto del título por “AGUANTE LANUS”.
+- Verificar que no existan otros títulos del home que deban mantenerse sin cambios.
+- Confirmar que el home renderice el nuevo título correctamente.
+
