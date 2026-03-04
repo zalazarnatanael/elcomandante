@@ -62,6 +62,34 @@ async function runOpenCode(issueNumber, instruction, isProgrammer = false, optio
                 isProgrammer ? `build-model=${process.env.BUILD_MODEL || "github-copilot/claude-haiku-4.5"}` : (planner?.model ? `plan-model=${planner.model}` : null)
             );
 
+            // CRITICAL: In PLAN mode, abort if any file modifications were attempted
+            if (!isProgrammer) {
+                const writeCheck = detectWriteAttempts(firstHistory);
+                if (writeCheck.hasViolation) {
+                    console.error(`🛑 [PLAN MODE VIOLATION] Attempted to modify files in read-only plan mode!`);
+                    writeCheck.violations.forEach(v => console.error(`   ${v}`));
+                    console.error(`🛑 [PLAN MODE] Aborting execution and trying fallback model to enforce read-only constraint`);
+                    
+                    // Force fallback to ensure plan stays read-only
+                    const fallbackModel = selectFallbackPlannerModel(planner);
+                    if (fallbackModel) {
+                        console.log(`🤖 [PLAN] Enforced fallback to: ${fallbackModel} (due to write violation)`);
+                        const fallbackCmd = buildBaseCommand(false, fallbackModel);
+                        const secondHistory = await runOnce(fallbackCmd, `plan-fallback-write-violation`, false);
+                        if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+                        const cleanedOutput = cleanOutput(secondHistory);
+                        recordPlanExecution(issueNumber, instruction, "completed", {
+                            model: fallbackModel,
+                            wasFallback: true,
+                            reason: "write_violation_detected",
+                            outputLength: cleanedOutput.length
+                        });
+                        resolve(cleanedOutput);
+                        return;
+                    }
+                }
+            }
+
             if (!shouldFallbackToPlanner(firstHistory, planner, { ...options, isBuildMode: isProgrammer })) {
                 if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
                 const cleanedOutput = cleanOutput(firstHistory);
@@ -205,6 +233,44 @@ function selectFallbackBuildModel(currentModel) {
     if (currentModel === "github-copilot/claude-haiku-4.5") return "opencode/trinity-large-preview-free";
     if (currentModel === "opencode/trinity-large-preview-free") return "opencode/minimax-m2.5-free";
     return null;
+}
+
+/**
+ * Check if output contains file modification attempts (Edit, Write, Delete)
+ * Used to enforce read-only mode during planning phase
+ * @param {string} text - output to check
+ * @returns {Object} { hasViolation: boolean, violations: string[] }
+ */
+function detectWriteAttempts(text) {
+    const violations = [];
+    
+    const editPatterns = [
+        /←\s*Edit\s+/i,                 // ← Edit file
+        /^-\s+if\s+\(/,                 // Diff line starting with "-" (file change)
+        /^\+\s+if\s+\(/,                 // Diff line starting with "+" (file addition)
+        /^Index:\s+/i,                   // Index: /path/to/file (diff header)
+        /^===+$/,                        // ===== (diff separator)
+        /^---\s+/,                       // --- /path (old file marker)
+        /^\+\+\+\s+/,                    // +++ /path (new file marker)
+        /←\s*Write\b/i,                  // ← Write file
+        /←\s*Delete\b/i                  // ← Delete file
+    ];
+    
+    const lines = text.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        for (const pattern of editPatterns) {
+            if (pattern.test(line)) {
+                violations.push(`Line ${i + 1}: ${line.substring(0, 80)}`);
+                break;
+            }
+        }
+    }
+    
+    return {
+        hasViolation: violations.length > 0,
+        violations
+    };
 }
 
 function cleanOutput(text) {
