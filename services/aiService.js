@@ -210,39 +210,88 @@ function selectFallbackBuildModel(currentModel) {
 function cleanOutput(text) {
     const noAnsi = text.replace(/\u001b\[[0-9;]*m/g, "");
     
-    // Remove everything before "Plan técnico actualizado:" or "Plan actualizado" or similar markers
-    const planMarkerMatch = noAnsi.match(/###\s*📋\s*(Plan|plan)[^\n]*/i);
-    let textToProcess = noAnsi;
+    // First pass: Remove all agent tool output lines
+    const toolOutputPatterns = [
+        /^→\s*Read\b.*/i,           // → Read file.ts
+        /^←\s*Edit\b.*/i,           // ← Edit file.ts
+        /^>\s*Write\b.*/i,          // > Write file.ts
+        /^✱\s*Grep\b.*/i,           // ✱ Grep "pattern"
+        /^✱\s*Glob\b.*/i,           // ✱ Glob "*.ts"
+        /^⚙\s*\w+/i,                // ⚙ RunCommand
+        /^Index:\s*/i,              // Index: /path/to/file
+        /^===+$/,                    // ========= (diff separator)
+        /^---\s+.*$/,                // --- /path/to/file
+        /^\+\+\+\s+.*$/,             // +++ /path/to/file
+        /^@@\s+-.*\+.*@@/,           // @@ -1,5 +1,6 @@ (diff hunk header)
+        /^-\s+\w+/,                  // -  content (diff line, but not "---")
+        /^\+\s+\w+/,                 // +  content (diff line, but not "+++")
+        /^\s*sh:\s*\d+:/i,           // sh: 1: command not found
+        /^npm\s+(warn|error)/i,      // npm warn or npm error
+        /^Oops!\s+Something/i,       // ESLint errors
+        /^error\s+TS\d+:/i,          // TypeScript errors (but keep in logs)
+        /^>\s+build\s+·/i,           // > build · model-name
+        /^>\s+programmer\s+·/i,      // > programmer · model-name
+        /^>\s+\w+\s+·\s+\w+/i        // > agent · model (generic)
+    ];
     
-    if (planMarkerMatch && planMarkerMatch.index) {
-        // Find the last occurrence of plan markers to keep only the final plan
-        const lastPlanMatch = noAnsi.lastIndexOf("###");
-        if (lastPlanMatch !== -1) {
-            textToProcess = noAnsi.substring(lastPlanMatch);
+    // Second pass: Find the last plan marker (## Plan, ### Plan, Plan técnico, etc.)
+    const planHeaderPatterns = [
+        /^#+\s*📋.*Plan/i,           // ### 📋 Plan...
+        /^##\s+Plan\s+técnico/i,     // ## Plan técnico...
+        /^##\s+Plan\s+actualizado/i, // ## Plan actualizado...
+        /^#\s+Plan\s+técnico/i,      // # Plan técnico...
+    ];
+    
+    let lines = noAnsi.split("\n");
+    
+    // Filter out tool output lines
+    lines = lines.filter(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return false;
+        
+        // Check if line matches any tool output pattern
+        for (const pattern of toolOutputPatterns) {
+            if (pattern.test(trimmed)) return false;
         }
+        
+        // Remove lines that are obvious model prompts or commands
+        if (/^¿?Quer[eé]s? que ejecute/i.test(trimmed)) return false;
+        if (/^¿?Quieres que ejecute/i.test(trimmed)) return false;
+        if (/^Necesito permiso para editar/i.test(trimmed)) return false;
+        if (/^[✱→⚙]/.test(trimmed.charAt(0))) return false;
+        
+        // Remove model role indicators
+        const dequoted = trimmed.replace(/^>\s*/, "");
+        if (dequoted === "build · gpt-5.2-codex") return false;
+        if (dequoted === "programmer · gpt-5.2-codex") return false;
+        if (/^(build|programmer) · /i.test(dequoted)) return false;
+        
+        return true;
+    });
+    
+    // Third pass: Find the last plan header and keep only from that point
+    let lastPlanIndex = -1;
+    for (let i = lines.length - 1; i >= 0; i--) {
+        for (const pattern of planHeaderPatterns) {
+            if (pattern.test(lines[i])) {
+                lastPlanIndex = i;
+                break;
+            }
+        }
+        if (lastPlanIndex !== -1) break;
     }
     
-    return textToProcess
-        .split("\n")
-        .filter(line => {
-            const trimmed = line.trim();
-            const dequoted = trimmed.replace(/^>\s*/, "");
-            if (!trimmed) return false;
-            if (dequoted === "build · gpt-5.2-codex") return false;
-            if (dequoted === "programmer · gpt-5.2-codex") return false;
-            if (/^(build|programmer) · /i.test(dequoted)) return false;
-            if (/^¿?Quer[eé]s? que ejecute/i.test(dequoted)) return false;
-            if (/^¿?Quieres que ejecute/i.test(dequoted)) return false;
-            if (/^Necesito permiso para editar/i.test(dequoted)) return false;
-            if (/^[✱→⚙]/.test(dequoted)) return false;
-            if (/^Read\b/.test(dequoted)) return false;
-            if (/^Grep\b/.test(dequoted)) return false;
-            if (/^Glob\b/.test(dequoted)) return false;
-            if (/apply_patch/i.test(dequoted)) return false;
-            return true;
-        })
-        .join("\n")
-        .trim();
+    // If we found a plan header, keep only from that point onwards
+    if (lastPlanIndex !== -1) {
+        lines = lines.slice(lastPlanIndex);
+    }
+    
+    // Fourth pass: Remove trailing empty lines and rejoin
+    while (lines.length > 0 && !lines[lines.length - 1].trim()) {
+        lines.pop();
+    }
+    
+    return lines.join("\n").trim();
 }
 
 module.exports = { runOpenCode };

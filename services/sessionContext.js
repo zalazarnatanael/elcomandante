@@ -88,33 +88,65 @@ function truncateText(text, maxLength) {
     return `${text.slice(0, maxLength)}…`;
 }
 
+function stripModelErrors(text) {
+    if (!text) return text;
+    const errorPatterns = [
+        /ProviderModelNotFoundError/gi,
+        /Model not found:/gi,
+        /Error: Request too large/gi,
+        /TPM/gi
+    ];
+    return text
+        .split("\n")
+        .filter(line => !errorPatterns.some(re => re.test(line)))
+        .join("\n");
+}
+
 function formatFeedback(feedbackItems) {
     return feedbackItems
         .map(item => {
-            const body = truncateText(item.body.replace(/\s+/g, " ").trim(), 700);
+            const cleaned = stripModelErrors(item.body).replace(/\s+/g, " ").trim();
+            const body = truncateText(cleaned, 700);
             return `- ${item.author}: ${body}`;
         })
         .join("\n");
 }
 
 function buildPlanPrompt(issue, session, isNew) {
+    const planStyle = (process.env.PLAN_STYLE || "short").toLowerCase();
     const base = isNew
-        ? `Analiza: ${issue.title}. Descripción: ${issue.body}. Genera un ### 📋 Plan.`
+        ? `Analiza: ${issue.title}. Descripción: ${issue.body}. Genera un ### 📋 Plan${planStyle === "short" ? " corto" : ""}.`
         : "Actualiza el plan técnico según el feedback en los comentarios.";
 
+    // CRITICAL: Enforce read-only mode
+    const readOnlyInstruction = `\n⚠️ STRICTLY READ-ONLY MODE:\n- Do NOT use Edit, Write, Delete, or any modification tools\n- Only use Read, Grep, Glob for analysis if absolutely needed\n- Output ONLY the technical plan with numbered tasks (# Todos checklist)\n- Format: ### 📋 Plan [description]\n[numbered list]\n# Todos\n[ ] Task 1\n[ ] Task 2\n- NO tool output, NO logs, NO file diffs`;
+
     const lastPlan = session.plans.length > 0 ? session.plans[session.plans.length - 1] : null;
-    const recentFeedback = session.feedback.slice(-5);
+    const recentFeedback = session.feedback.slice(planStyle === "short" ? -2 : -5);
 
     const contextParts = [];
     if (lastPlan && lastPlan.body) {
-        contextParts.push("Plan previo:\n" + lastPlan.body.trim());
+        const trimmedPlan = planStyle === "short"
+            ? truncateText(lastPlan.body.trim().replace(/\s+/g, " "), 600)
+            : lastPlan.body.trim();
+        contextParts.push("Plan previo:\n" + trimmedPlan);
     }
     if (recentFeedback.length > 0) {
         contextParts.push("Feedback reciente:\n" + formatFeedback(recentFeedback));
     }
 
-    if (contextParts.length === 0) return base;
-    return `${base}\n\nContexto acumulado:\n${contextParts.join("\n\n")}`;
+    if (planStyle === "short") {
+        const shortInstruction = "Plan breve en 3-5 puntos, sin detalles extensos.";
+        const prompt = contextParts.length === 0 
+            ? `${base}\n${shortInstruction}`
+            : `${base}\n${shortInstruction}\n\nContexto acumulado:\n${contextParts.join("\n\n")}`;
+        return prompt + readOnlyInstruction;
+    }
+
+    const prompt = contextParts.length === 0 
+        ? base
+        : `${base}\n\nContexto acumulado:\n${contextParts.join("\n\n")}`;
+    return prompt + readOnlyInstruction;
 }
 
 module.exports = {
