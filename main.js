@@ -17,6 +17,33 @@ function summarizeFeedback(items, maxLength = 500) {
     return `${joined.slice(0, maxLength)}…`;
 }
 
+function extractNotionUrl(text) {
+    if (!text) return null;
+    const match = text.match(/https:\/\/www\.notion\.so\/[^\s)]+/i);
+    return match ? match[0] : null;
+}
+
+function buildSummaryFromPlan(plan, maxItems = 5) {
+    if (!plan) return [];
+    const lines = plan.split("\n");
+    const bullets = lines
+        .map(line => line.trim())
+        .filter(line => line.startsWith("- "))
+        .map(line => line.replace(/^-\s+/, ""))
+        .filter(Boolean);
+    return bullets.slice(0, maxItems);
+}
+
+function buildPrBody(issue, plan) {
+    const summaryItems = buildSummaryFromPlan(plan);
+    const summaryLines = summaryItems.length > 0 ? summaryItems : [`Actualizar lo solicitado en #${issue.number}.`];
+    const notionUrl = extractNotionUrl(issue.body);
+    const notes = ["No se ejecutaron tests automáticos."];
+    if (notionUrl) notes.push(`Notion: ${notionUrl}`);
+
+    return `## Summary\n${summaryLines.map(item => `- ${item}`).join("\n")}\n\n## Notas\n${notes.map(item => `- ${item}`).join("\n")}\n\nResolves #${issue.number}`;
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -113,7 +140,16 @@ async function notifyFailure(issueNumber, stage, err, context = {}) {
 
 async function runPlanFlow(issue) {
     console.log(`🧠 [PLAN] #${issue.number}`);
+    let workingAdded = false;
+    const sessionId = `ses-ferreteria-i${issue.number}-${Date.now()}`;
+    const traceId = issue.traceId || "";
     try {
+        try {
+            await addIssueLabel(issue.number, LABELS.WORKING);
+            workingAdded = true;
+        } catch (e) {
+            console.log(`⚠️ [PLAN] No se pudo agregar ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
+        }
         const isNew = issue.labels.some(l => l.name === LABELS.NEW);
         if (isNew && await hasPlanComment(issue.number)) {
             console.log(`ℹ️ [PLAN] Ya existe un plan para #${issue.number}. Se omite duplicado.`);
@@ -138,10 +174,9 @@ async function runPlanFlow(issue) {
             console.log(`🧩 [CONTEXT] Feedback: ${summarizeFeedback(newFeedback)}`);
         }
 
-        await addIssueLabel(issue.number, LABELS.WORKING);
         const instruction = buildPlanPrompt(issue, session, isNew);
 
-        const res = await runOpenCode(issue.number, instruction, false);
+        const res = await runOpenCode(issue.number, instruction, false, { sessionId, continue: false, logSuffix: "plan", traceId });
         session.plans.push({
             createdAt: new Date().toISOString(),
             body: res
@@ -159,23 +194,46 @@ async function runPlanFlow(issue) {
         await addIssueLabel(issue.number, LABELS.WAITING_HUMAN);
         await removeIssueLabel(issue.number, LABELS.WAITING_IA);
         await removeIssueLabel(issue.number, LABELS.NEW);
-        await removeIssueLabel(issue.number, LABELS.WORKING);
     } catch (err) {
         console.error(`❌ Error en #${issue.number}:`, err.message);
         await notifyFailure(issue.number, 'PLAN', err);
+    } finally {
+        if (workingAdded) {
+            try {
+                await removeIssueLabel(issue.number, LABELS.WORKING);
+            } catch (e) {
+                console.log(`⚠️ [PLAN] No se pudo remover ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
+            }
+        }
     }
 }
 
 async function runBuildFlow(issue) {
     console.log(`🛠️ [BUILD] #${issue.number}`);
+    let workingAdded = false;
     try {
-        await addIssueLabel(issue.number, LABELS.WORKING);
+        try {
+            await addIssueLabel(issue.number, LABELS.WORKING);
+            workingAdded = true;
+        } catch (e) {
+            console.log(`⚠️ [BUILD] No se pudo agregar ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
+        }
         const branch = `task/issue-${issue.number}`;
 
         const worktreePath = await ensureWorktree(issue.number, branch);
         console.log(`🧰 [WORKTREE] #${issue.number} -> ${worktreePath}`);
         const worktreeGit = simpleGit(worktreePath);
         await worktreeGit.checkout(branch).catch(() => {});
+        const traceId = issue.traceId || "";
+
+        const baseDiff = await git.status();
+        if (baseDiff.files.length > 0) {
+            const baseFiles = baseDiff.files.map(f => f.path).slice(0, 10);
+            console.log(`⚠️ [BUILD] Cambios detectados en repo base (${baseDiff.files.length}). Se ignoran para evitar mezclas.`);
+            if (baseFiles.length > 0) {
+                console.log(`⚠️ [BUILD] Archivos en repo base: ${baseFiles.join(", ")}`);
+            }
+        }
 
         const { data: comments } = await withRetry(() => octokit.rest.issues.listComments({ owner: REPO_OWNER, repo: REPO_NAME, issue_number: issue.number }));
         const session = loadSession(issue.number);
@@ -186,12 +244,14 @@ async function runBuildFlow(issue) {
         console.log(`🧩 [CONTEXT] ${issue.title}`);
         console.log(`🧩 [CONTEXT] Plan: ${planSummary}${planSummary.length === 500 ? "…" : ""}`);
 
-        await runOpenCode(issue.number, `Sigue este plan:\n${plan}\n\nEJECUTA AHORA.`, true);
+        const sessionId = `ses-ferreteria-i${issue.number}-${Date.now()}`;
+        await runOpenCode(issue.number, `Sigue este plan:\n${plan}\n\nEJECUTA AHORA.`, true, { cwd: worktreePath, sessionId, continue: false, logSuffix: "build", traceId });
 
         const status = await worktreeGit.status();
         if (status.files.length > 0) {
             await worktreeGit.add("./*").commit(`feat: fix #${issue.number}`);
             try {
+                console.log(`🚀 [GIT] Push branch ${branch}`);
                 await gitPushWithRetry(worktreeGit, "origin", branch, { maxAttempts: 3, baseDelayMs: 1000 });
             } catch (pushErr) {
                 console.error(`❌ Error push en #${issue.number}:`, pushErr.message);
@@ -199,13 +259,15 @@ async function runBuildFlow(issue) {
                 return;
             }
             try {
+                console.log(`🧾 [PR] Creando PR para ${branch}`);
+                const prBody = buildPrBody(issue, plan);
                 const { data: pr } = await withRetry(() => octokit.rest.pulls.create({
                     owner: REPO_OWNER,
                     repo: REPO_NAME,
                     title: `PR: ${issue.title}`,
                     head: branch,
                     base: "main",
-                    body: `Resuelve #${issue.number}`
+                    body: prBody
                 }));
                 console.log(`✅ PR creado: ${pr.html_url}`);
             } catch (e) {
@@ -219,12 +281,14 @@ async function runBuildFlow(issue) {
                     const existing = existingPrs[0];
                     if (existing) {
                         const body = existing.body || "";
-                        if (!body.includes(`Resuelve #${issue.number}`)) {
+                        if (!body.includes(`Resolves #${issue.number}`) || !body.includes("## Summary")) {
+                            const prBody = buildPrBody(issue, plan);
+                            const mergedBody = body ? `${prBody}\n\n---\n\n${body}` : prBody;
                             await withRetry(() => octokit.rest.pulls.update({
                                 owner: REPO_OWNER,
                                 repo: REPO_NAME,
                                 pull_number: existing.number,
-                                body: `Resuelve #${issue.number}\n\n${body}`.trim()
+                                body: mergedBody.trim()
                             }));
                         }
                         console.log(`✅ PR existente: ${existing.html_url}`);
@@ -235,11 +299,33 @@ async function runBuildFlow(issue) {
                     console.log("PR ya existe.");
                 }
             }
+        } else {
+            const noChangesMsg = "⚠️ No se detectaron cambios para aplicar en este issue.";
+            console.log(`⚠️ [BUILD] ${noChangesMsg}`);
+            try {
+                await withRetry(() => octokit.rest.issues.createComment({
+                    owner: REPO_OWNER,
+                    repo: REPO_NAME,
+                    issue_number: issue.number,
+                    body: noChangesMsg
+                }));
+            } catch (e) {
+                console.log(`⚠️ [BUILD] No se pudo comentar en #${issue.number}: ${e.message}`);
+            }
+            return;
         }
         await updateLabels(issue.number, [LABELS.DONE]);
     } catch (err) {
         console.error(`❌ Error en #${issue.number}:`, err.message);
         await notifyFailure(issue.number, 'BUILD', err);
+    } finally {
+        if (workingAdded) {
+            try {
+                await removeIssueLabel(issue.number, LABELS.WORKING);
+            } catch (e) {
+                console.log(`⚠️ [BUILD] No se pudo remover ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
+            }
+        }
     }
 }
 

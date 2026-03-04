@@ -1,0 +1,11 @@
+{
+  "issueNumber": 129,
+  "lastCommentId": 0,
+  "plans": [
+    {
+      "createdAt": "2026-03-04T00:01:04.873Z",
+      "body": "→ Read app/page.tsx\n→ Read components/landing/hero-section.tsx\n⚙ apply_patch Success. Updated the following files:\nM components/landing/hero-section.tsx\nListo: actualice el titulo principal del hero en `components/landing/hero-section.tsx` a “El futuro es hoy viejo”.\n### 📋 Plan\n- Revisar la home y localizar el titulo actual del hero.\n- Reemplazar el texto por “El futuro es hoy viejo”.\n- Verificar que no haya otros titulos duplicados en la home.\nSi queres, puedo ejecutar `npm run lint` o levantar el dev server para validar visualmente."
+    }
+  ],
+  "feedback": []
+}

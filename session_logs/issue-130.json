@@ -1,0 +1,11 @@
+{
+  "issueNumber": 130,
+  "lastCommentId": 0,
+  "plans": [
+    {
+      "createdAt": "2026-03-04T00:01:11.899Z",
+      "body": "✱ Glob \"**/*footer*.*\" 1 match\n→ Read components/landing/public-footer.tsx\n✱ Grep \"catalogo|b2b|servicios|#catalogo|#b2b\" 9 matches\n→ Read components/landing/public-navbar.tsx\n### 📋 Plan\n- Revisar la navegación actual en `components/landing/public-footer.tsx` y comparar con la del header para alinear rutas.\n- Identificar si los enlaces deben ir a secciones (`#catalogo`, `#b2b`) o a páginas (`/catalog`, `/serviciosb2b`) según el comportamiento esperado del sitio.\n- Corregir los `href` del footer para que apunten a las rutas correctas y validar que los externos (WhatsApp) mantengan `target/rel`.\n- Verificar que los anchors/rutas existan y funcionen en `app/page.tsx` y secciones relacionadas.\n- Entregar cambios listos y sugerir una verificación rápida en la UI (footer + navegación principal)."
+    }
+  ],
+  "feedback": []
+}

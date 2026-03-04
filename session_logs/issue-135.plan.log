@@ -1,0 +1,13 @@
+
+
+--- EXEC: 2026-03-04T00:14:07.211Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+[0m% [0mWebFetch http://69.6.227.244:3000/uploads/notion_8871161054f8fbc5b96f822e1ee88d66.png
+### 📋 Plan
+- Ubicar el componente de tarjetas donde aparece el ícono + label (“Crédito flexible”, “Inventario en vivo”, etc.) y revisar su contenedor (gap/padding).
+- Ajustar el espaciado entre el ícono y el texto (gap en el wrapper o padding en el badge) para que no queden pegados.
+- Verificar consistencia en desktop y mobile, cuidando que el cambio no rompa alineaciones en otras cards similares.
+- Hacer una revisión visual rápida del bloque completo para asegurar que el nuevo padding mantiene la jerarquía y balance.
+

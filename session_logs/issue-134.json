@@ -1,0 +1,11 @@
+{
+  "issueNumber": 134,
+  "lastCommentId": 0,
+  "plans": [
+    {
+      "createdAt": "2026-03-04T00:14:25.498Z",
+      "body": "M components/landing/public-footer.tsx\nAlinee los links de la navegacion del footer con las rutas reales de la web y los unifique con la barra superior para evitar ids que no existen en esas paginas. El cambio esta en `components/landing/public-footer.tsx`.\n### 📋 Plan\n- Revisar los links actuales del footer y detectar rutas incorrectas.\n- Identificar la navegacion correcta en el header.\n- Ajustar los links del footer a las rutas reales.\nSiguientes pasos opcionales:\n1) Probar navegacion en `http://localhost:3000` y verificar links del footer.\n2) Si queres, ejecuto `npm run lint`."
+    }
+  ],
+  "feedback": []
+}

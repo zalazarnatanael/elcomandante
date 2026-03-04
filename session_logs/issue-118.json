@@ -1,0 +1,15 @@
+{
+  "issueNumber": 118,
+  "lastCommentId": 3993546238,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T21:07:58.853Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “El futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    },
+    {
+      "createdAt": "2026-03-03T21:09:25.051Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “El futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    }
+  ],
+  "feedback": []
+}

@@ -39,6 +39,7 @@ function mapLabelsFromEtiquetas(tags) {
 
   // Siempre útil:
   labels.push("from-notion");
+  labels.push("bot-working");
 
   return [...new Set(labels)];
 }
@@ -102,6 +103,26 @@ async function createGitHubIssue({ title, body, labels }) {
   }
 
   return await r.json(); // html_url, number
+}
+
+async function updateIssueLabels(issueNumber, labels) {
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issueNumber}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${GH_TOKEN}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ labels }),
+  });
+
+  if (!r.ok) {
+    const text = await r.text();
+    throw new Error(`GitHub issue update failed: ${r.status} ${text}`);
+  }
+
+  return await r.json();
 }
 
 async function updateNotionAfterIssue(pageId, issueUrl) {
@@ -227,6 +248,12 @@ Devolvé Markdown con estas secciones:
 
     try {
       const issue = await createGitHubIssue({ title, body, labels });
+      try {
+        const nextLabels = [...new Set([...labels, "bot-working"])]
+        await updateIssueLabels(issue.number, nextLabels);
+      } catch (e) {
+        console.error(`No se pudo agregar bot-working en #${issue.number}:`, e.message);
+      }
       await updateNotionAfterIssue(pageId, issue.html_url);
       console.log(`Created issue: ${issue.html_url}`);
     } catch (e) {

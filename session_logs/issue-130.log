@@ -1,0 +1,43 @@
+
+
+--- EXEC: 2026-03-04T00:01:11.898Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+[0m✱ [0mGlob "**/*footer*.*"[90m 1 match[0m
+[0m→ [0mRead components/landing/public-footer.tsx
+[0m✱ [0mGrep "catalogo|b2b|servicios|#catalogo|#b2b"[90m 9 matches[0m
+[0m→ [0mRead components/landing/public-navbar.tsx
+### 📋 Plan
+- Revisar la navegación actual en `components/landing/public-footer.tsx` y comparar con la del header para alinear rutas.
+- Identificar si los enlaces deben ir a secciones (`#catalogo`, `#b2b`) o a páginas (`/catalog`, `/serviciosb2b`) según el comportamiento esperado del sitio.
+- Corregir los `href` del footer para que apunten a las rutas correctas y validar que los externos (WhatsApp) mantengan `target/rel`.
+- Verificar que los anchors/rutas existan y funcionen en `app/page.tsx` y secciones relacionadas.
+- Entregar cambios listos y sugerir una verificación rápida en la UI (footer + navegación principal).
+
+
+
+--- EXEC: 2026-03-04T00:03:10.142Z ---
+[0m
+> build · gpt-5.2-codex
+[0m
+[0m✱ [0mGlob "**/*footer*.*"[90m in . · 1 match[0m
+[0m✱ [0mGrep "catalogo|b2b|servicios|#catalogo|#b2b"[90m in . · 9 matches[0m
+[0m→ [0mRead components/landing/public-footer.tsx
+[0m→ [0mRead components/landing/public-navbar.tsx
+[0m→ [0mRead app/page.tsx
+[0m⚙ [0mapply_patch Success. Updated the following files:
+M components/landing/public-footer.tsx
+Alineé los links del footer con la navegación del header para que apunten a páginas, no a anchors. En el home siguen existiendo las secciones `#catalogo` y `#b2b`, pero el navbar ya usa rutas, así que el footer ahora coincide con ese comportamiento y evita inconsistencias.
+
+Cambios
+- Actualicé los `href` del footer a `/catalog` y `/serviciosb2b` en `components/landing/public-footer.tsx`.
+- Mantuve el WhatsApp externo con `target/rel` tal como estaba.
+
+Archivos tocados
+- `components/landing/public-footer.tsx`
+
+Sugerencias de verificación rápida
+1. Navegar desde el footer a Catálogo y Servicios B2B y confirmar que cargan las páginas correctas.
+2. Hacer click en “Cotizar por WhatsApp” y validar que abre en nueva pestaña.
+

@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { Octokit } = require('@octokit/rest');
 const { Client } = require('@notionhq/client');
-const { LABELS } = require('./config/constants');
+const { LABELS, REPO_OWNER, REPO_NAME } = require('./config/constants');
 const { runPlanFlow, runBuildFlow, notifyFailure } = require('./main'); 
 const { removeWorktree } = require('./services/worktreeManager');
 const { withRetry } = require('./services/githubRetry');
@@ -27,6 +27,8 @@ const maxConcurrent = 3;
 let activeWorkers = 0;
 const inFlightIssues = new Set();
 const inFlight = new Set();
+const traceIds = new Map();
+const labelCooldowns = new Map();
 const SESSION_DIR = path.join(__dirname, 'session_logs');
 
 function buildTaskKey(task) {
@@ -38,6 +40,21 @@ function getIssueKey(task) {
     return task.issueNumber || task.number || null;
 }
 
+function getTraceId(issueNumber) {
+    if (!issueNumber) return null;
+    if (!traceIds.has(issueNumber)) {
+        const suffix = Math.random().toString(36).slice(2, 8).toUpperCase();
+        traceIds.set(issueNumber, `ISSUE-${issueNumber}-${suffix}`);
+    }
+    return traceIds.get(issueNumber);
+}
+
+function attachTrace(issueNumber, issue) {
+    const traceId = getTraceId(issueNumber);
+    if (issue) issue.traceId = traceId;
+    return traceId;
+}
+
 function enqueueTask(task) {
     const key = buildTaskKey(task);
     const alreadyQueued = queue.some(t => buildTaskKey(t) === key);
@@ -45,7 +62,12 @@ function enqueueTask(task) {
         console.log(`ℹ️ [FIFO] Tarea duplicada omitida: ${task.name} (#${task.number})`);
         return false;
     }
+    if (task.issueNumber && !task.traceId) {
+        task.traceId = getTraceId(task.issueNumber);
+    }
     queue.push(task);
+    const trace = task.traceId ? ` | trace=${task.traceId}` : '';
+    console.log(`🧾 [FIFO] Encolada: ${task.name} (#${task.number}) | cola=${queue.length}${trace}`);
     return true;
 }
 
@@ -68,7 +90,9 @@ async function processQueue() {
         if (issueKey) inFlightIssues.add(issueKey);
         activeWorkers += 1;
 
-        console.log(`\n📦 [FIFO] Ejecutando: ${task.name} (#${task.number}) [workers: ${activeWorkers}/${maxConcurrent}]`);
+        const startedAt = Date.now();
+        const trace = task.traceId ? ` | trace=${task.traceId}` : '';
+        console.log(`\n📦 [FIFO] Ejecutando: ${task.name} (#${task.number}) [workers: ${activeWorkers}/${maxConcurrent}]${trace}`);
         task.execute()
             .catch(async err => {
                 console.error(`❌ Error en #${task.number}:`, err.message);
@@ -80,6 +104,9 @@ async function processQueue() {
                 inFlight.delete(taskKey);
                 if (issueKey) inFlightIssues.delete(issueKey);
                 activeWorkers -= 1;
+                const durationMs = Date.now() - startedAt;
+                console.log(`✅ [FIFO] Finalizada: ${task.name} (#${task.number}) | ${durationMs}ms | workers=${activeWorkers}/${maxConcurrent}${trace}`);
+                console.log(`📊 [FIFO] Estado: cola=${queue.length} | inFlightTasks=${inFlight.size} | inFlightIssues=${inFlightIssues.size}`);
                 setTimeout(processQueue, 100); 
             });
     }
@@ -97,6 +124,25 @@ function extractIssueNumberFromPr(pr) {
         if (match) return Number(match[1]);
     }
     return null;
+}
+
+function isBotComment(comment) {
+    const login = comment?.user?.login || "";
+    const type = comment?.user?.type || "";
+    if (login && BOT_LOGIN && login.toLowerCase() === BOT_LOGIN.toLowerCase()) return true;
+    if (type.toLowerCase() === "bot") return true;
+    if (login.toLowerCase().endsWith("[bot]")) return true;
+    return false;
+}
+
+function shouldIgnoreLabelEvent(issueNumber) {
+    if (!issueNumber) return false;
+    const now = Date.now();
+    const last = labelCooldowns.get(issueNumber) || 0;
+    const elapsed = now - last;
+    if (elapsed < 2500) return true;
+    labelCooldowns.set(issueNumber, now);
+    return false;
 }
 
 function extractNotionPageIdFromIssue(issue) {
@@ -295,7 +341,32 @@ app.post('/webhook', (req, res) => {
     const event = req.headers['x-github-event'];
     const { action, issue, label } = req.body;
 
+    if (issue?.number) {
+        const labels = (issue.labels || []).map(l => (typeof l === 'string' ? l : l.name)).filter(Boolean);
+        console.log(`🔔 [WEBHOOK] event=${event} action=${action} issue=#${issue.number} labels=${labels.join(',')}`);
+    } else {
+        console.log(`🔔 [WEBHOOK] event=${event} action=${action}`);
+    }
+
+    if (event === 'issues' && action === 'opened') {
+        const owner = req.body.repository?.owner?.login;
+        const repo = req.body.repository?.name;
+        const labels = (issue?.labels || []).map(l => (typeof l === 'string' ? l : l.name)).filter(Boolean);
+
+        if (labels.includes(LABELS.NEW)) {
+            if (!owner || !repo) {
+                console.log(`⚠️ [LABEL] owner/repo faltante para issue #${issue.number}`);
+            } else {
+                enqueueTask({ number: issue.number, name: "PLAN", issueNumber: issue.number, owner, repo, execute: () => runPlanFlow(issue) });
+                processQueue();
+            }
+        }
+    }
+
     if (event === 'issues' && action === 'labeled') {
+        if (shouldIgnoreLabelEvent(issue?.number)) {
+            return res.status(200).send('ignored');
+        }
         const labelName = label?.name;
         const owner = req.body.repository?.owner?.login;
         const repo = req.body.repository?.name;
@@ -304,16 +375,19 @@ app.post('/webhook', (req, res) => {
             if (!owner || !repo) {
                 console.log(`⚠️ [LABEL] owner/repo faltante para issue #${issue.number}`);
             } else {
-                enqueueTask({ number: issue.number, name: "PLAN", issueNumber: issue.number, owner, repo, execute: () => runPlanFlow(issue) });
+                const traceId = attachTrace(issue.number, issue);
+                enqueueTask({ number: issue.number, name: "PLAN", issueNumber: issue.number, owner, repo, traceId, execute: () => runPlanFlow(issue) });
             }
         }
         if (labelName === LABELS.READY) {
+            const traceId = attachTrace(issue.number, issue);
             enqueueTask({
                 number: issue.number,
                 name: "READY-LABELS",
                 issueNumber: issue.number,
                 owner,
                 repo,
+                traceId,
                 execute: async () => {
                     if (!owner || !repo) {
                         console.log(`⚠️ [LABEL] owner/repo faltante para issue #${issue.number}`);
@@ -328,22 +402,22 @@ app.post('/webhook', (req, res) => {
                     console.log(`🏷️ [LABEL] Issue #${issue.number} -> ${LABELS.READY} + ${LABELS.WORKING}`);
                 }
             });
-            enqueueTask({ number: issue.number, name: "PLAN", issueNumber: issue.number, owner, repo, execute: () => runPlanFlow(issue) });
-            enqueueTask({ number: issue.number, name: "BUILD", issueNumber: issue.number, owner, repo, execute: () => runBuildFlow(issue) });
+            enqueueTask({ number: issue.number, name: "BUILD", issueNumber: issue.number, owner, repo, traceId, execute: () => runBuildFlow(issue) });
         }
         processQueue();
     }
     if (event === 'issue_comment' && action === 'created') {
-        const commenter = req.body.comment?.user?.login || "";
-        const isBot = commenter.toLowerCase() === BOT_LOGIN.toLowerCase();
+        const isBot = isBotComment(req.body.comment);
         if (!isBot) {
             const issueNumber = issue?.number;
             const owner = req.body.repository?.owner?.login;
             const repo = req.body.repository?.name;
             if (issueNumber) {
+                const traceId = attachTrace(issueNumber, issue);
                 enqueueTask({
                     number: issueNumber,
                     name: 'REPLAN',
+                    traceId,
                     execute: async () => {
                         if (!owner || !repo) {
                             console.log(`⚠️ [LABEL] owner/repo faltante para issue #${issueNumber}`);
@@ -358,7 +432,8 @@ app.post('/webhook', (req, res) => {
                         }));
                         console.log(`🏷️ [LABEL] Issue #${issueNumber} -> ${LABELS.WAITING_IA} + ${LABELS.WORKING}`);
                         if (issue) {
-                            enqueueTask({ number: issueNumber, name: "PLAN", issueNumber, owner, repo, execute: () => runPlanFlow(issue) });
+                            const nestedTraceId = attachTrace(issueNumber, issue);
+                            enqueueTask({ number: issueNumber, name: "PLAN", issueNumber, owner, repo, traceId: nestedTraceId, execute: () => runPlanFlow(issue) });
                             processQueue();
                         }
                     }
@@ -370,12 +445,14 @@ app.post('/webhook', (req, res) => {
     if (event === 'pull_request' && action === 'closed') {
         const pr = req.body.pull_request;
         if (pr && pr.merged) {
+            const traceId = attachTrace(pr.number, pr);
             enqueueTask({
                 number: pr.number,
                 name: 'PR-CLOSE',
                 issueNumber: extractIssueNumberFromPr(pr),
                 owner: pr.base.repo.owner.login,
                 repo: pr.base.repo.name,
+                traceId,
                 execute: () => handlePrClosed(pr)
             });
             processQueue();
@@ -385,3 +462,36 @@ app.post('/webhook', (req, res) => {
 });
 
 app.listen(port, () => console.log(`🚀 Bot activo en puerto ${port}`));
+
+async function scanFromNotionIssues() {
+    try {
+        const { data: issues } = await withRetry(() => octokit.rest.issues.listForRepo({
+            owner: REPO_OWNER,
+            repo: REPO_NAME,
+            labels: LABELS.NEW,
+            state: 'open',
+            per_page: 20
+        }));
+
+        if (!issues.length) return;
+        console.log(`🔎 [FALLBACK] Encontradas ${issues.length} issues con ${LABELS.NEW}`);
+
+        for (const issue of issues) {
+            const traceId = attachTrace(issue.number, issue);
+            enqueueTask({
+                number: issue.number,
+                name: "PLAN",
+                issueNumber: issue.number,
+                owner: REPO_OWNER,
+                repo: REPO_NAME,
+                traceId,
+                execute: () => runPlanFlow(issue)
+            });
+        }
+        processQueue();
+    } catch (err) {
+        console.log(`⚠️ [FALLBACK] Error escaneando ${LABELS.NEW}: ${err.message}`);
+    }
+}
+
+setInterval(scanFromNotionIssues, 60000);

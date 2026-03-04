@@ -75,6 +75,10 @@ async function withRetry(fn, options = {}) {
             const baseDelay = retryAfter !== null ? retryAfter : expDelay;
             const jitter = baseDelay * jitterRatio;
             const delay = Math.max(0, baseDelay - jitter + Math.random() * jitter * 2);
+            const status = getStatus(err);
+            const code = err?.code || err?.cause?.code;
+            const reason = status ? `status=${status}` : (code ? `code=${code}` : 'error');
+            console.log(`🔁 [GITHUB] Reintento ${attempt}/${maxAttempts} (${reason}) en ${Math.round(delay)}ms`);
             await sleep(delay);
         }
     }

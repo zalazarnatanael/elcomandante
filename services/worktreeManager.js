@@ -16,7 +16,10 @@ async function ensureWorktree(issueNumber, branch) {
         await baseRepo.fetch().catch(() => {});
         const existsRemote = await baseRepo.listRemote(['--heads', 'origin', branch]).then(res => res.trim().length > 0).catch(() => false);
         const baseRef = existsRemote ? `origin/${branch}` : 'origin/main';
+        console.log(`🧰 [WORKTREE] Creando ${worktreePath} desde ${baseRef}`);
         await baseRepo.raw(['worktree', 'add', '-B', branch, worktreePath, baseRef]);
+    } else {
+        console.log(`🧰 [WORKTREE] Reusando ${worktreePath}`);
     }
 
     return worktreePath;
@@ -29,6 +32,7 @@ async function removeWorktree(issueNumber, branch) {
     try {
         if (fs.existsSync(worktreePath)) {
             await baseRepo.raw(['worktree', 'remove', '--force', worktreePath]);
+            console.log(`🧹 [WORKTREE] Eliminado ${worktreePath}`);
         }
     } catch (err) {
         console.log(`⚠️ [WORKTREE] No se pudo eliminar worktree ${worktreePath}: ${err.message}`);
@@ -36,12 +40,14 @@ async function removeWorktree(issueNumber, branch) {
 
     try {
         await baseRepo.branch(['-D', branch]);
+        console.log(`🧹 [WORKTREE] Borrada branch local ${branch}`);
     } catch (err) {
         console.log(`⚠️ [WORKTREE] No se pudo borrar branch local ${branch}: ${err.message}`);
     }
 
     try {
         await baseRepo.push('origin', `:${branch}`);
+        console.log(`🧹 [WORKTREE] Borrada branch remota ${branch}`);
     } catch (err) {
         console.log(`⚠️ [WORKTREE] No se pudo borrar branch remoto ${branch}: ${err.message}`);
     }

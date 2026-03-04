@@ -6,6 +6,10 @@ module.exports = {
     REPO_OWNER: "zalazarnatanael",
     REPO_NAME: "v0-ferreteria",
     WORKTREE_ROOT: process.env.WORKTREE_ROOT || path.join(process.env.HOME, "openclaw-workspace/worktrees/v0-ferreteria"),
+    ALLOWED_EDIT_PATHS: (process.env.ALLOWED_EDIT_PATHS || "")
+        .split(",")
+        .map(p => p.trim())
+        .filter(Boolean),
     TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || process.env.OPENCLAW_TELEGRAM_CHAT_ID || "",
     VPS_URL: process.env.VPS_URL || "http://TU_IP_PUBLICA:3000", // Cambia esto por tu IP
     LABELS: {

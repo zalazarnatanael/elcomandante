@@ -1,0 +1,25 @@
+
+
+--- EXEC: 2026-03-04T00:18:16.361Z ---
+--- TRACE: ISSUE-134-IZ12WI ---
+[0m
+> build · gpt-5.2-codex
+[0m
+[0m→ [0mRead components/landing/public-footer.tsx
+[0m✱ [0mGlob "**/*header*.tsx"[90m 1 match[0m
+[0m→ [0mRead components/exchange-rate-header.tsx
+[0m✱ [0mGrep "Navegación|header|nav"[90m 88 matches[0m
+[0m→ [0mRead components/landing/public-navbar.tsx
+[0m⚙ [0mapply_patch Success. Updated the following files:
+M components/landing/public-footer.tsx
+Actualicé los links del footer para que coincidan con la navegación del header y usen rutas reales. Ajusté también el CTA a la misma URL de WhatsApp del navbar.
+
+Cambios en `components/landing/public-footer.tsx`:
+- Catálogo, Servicios B2B y Contacto ahora apuntan a `/catalog`, `/serviciosb2b`, `/contact`.
+- El link externo pasó a “Abrir Cuenta Corriente” con la URL completa de WhatsApp.
+- Links internos usan `Link` de Next y los externos mantienen `target="_blank"` con `rel`.
+
+Siguientes pasos opcionales:
+1) Probar navegación en `http://localhost:3000` y verificar links del footer.
+2) Ejecutar `npm run lint`.
+

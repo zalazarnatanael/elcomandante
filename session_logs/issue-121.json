@@ -1,0 +1,11 @@
+{
+  "issueNumber": 121,
+  "lastCommentId": 0,
+  "plans": [
+    {
+      "createdAt": "2026-03-03T21:17:59.506Z",
+      "body": "### 📋 Plan\n- Revisar `components/landing/hero-section.tsx` para ubicar el título visible del home.\n- Reemplazar el texto del título por “El futuro es hoy”.\n- Verificar si hay metadata asociada en `app/page.tsx` o `app/layout.tsx` y mantener consistencia si aplica.\n- Confirmar que el home renderice el nuevo título correctamente."
+    }
+  ],
+  "feedback": []
+}
