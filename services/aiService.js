@@ -21,7 +21,8 @@ async function runOpenCode(issueNumber, instruction, isProgrammer = false, optio
     console.log(getStateSummary(issueNumber));
     
     const planner = !isProgrammer ? getPlannerConfig(instruction, options) : null;
-    const baseCmd = buildBaseCommand(isProgrammer, planner?.model);
+    const buildOverride = options.buildModelOverride ? String(options.buildModelOverride).trim() : null;
+    const baseCmd = buildBaseCommand(isProgrammer, isProgrammer ? buildOverride : planner?.model);
     const cwd = options.cwd || REPO_PATH;
     const allowedRoots = ALLOWED_EDIT_PATHS || [WORKTREE_ROOT].filter(Boolean);
     if (allowedRoots.length > 0) {
@@ -59,7 +60,9 @@ async function runOpenCode(issueNumber, instruction, isProgrammer = false, optio
         const runSequence = async () => {
             const firstHistory = await runOnce(
                 baseCmd,
-                isProgrammer ? `build-model=${process.env.BUILD_MODEL || "github-copilot/claude-haiku-4.5"}` : (planner?.model ? `plan-model=${planner.model}` : null)
+                isProgrammer
+                    ? `build-model=${buildOverride || process.env.BUILD_MODEL || "github-copilot/claude-haiku-4.5"}`
+                    : (planner?.model ? `plan-model=${planner.model}` : null)
             );
 
             // CRITICAL: In PLAN mode, abort if any file modifications were attempted
@@ -110,7 +113,7 @@ async function runOpenCode(issueNumber, instruction, isProgrammer = false, optio
             let fallbackLabel = null;
             
             if (isProgrammer) {
-                const currentModel = process.env.BUILD_MODEL || "github-copilot/claude-haiku-4.5";
+                const currentModel = buildOverride || process.env.BUILD_MODEL || "github-copilot/claude-haiku-4.5";
                 fallbackModel = options.buildModelFallback || selectFallbackBuildModel(currentModel);
                 fallbackLabel = fallbackModel ? `fallback-build-model=${fallbackModel}` : null;
             } else {
@@ -173,6 +176,11 @@ function buildBaseCommand(isProgrammer, model) {
     return `${base} --model "${model}"`;
 }
 
+function overridePlannerModel(modelOverride) {
+    if (!modelOverride) return null;
+    return String(modelOverride).trim() || null;
+}
+
 function getPlannerConfig(instruction, options = {}) {
     const normalized = (instruction || "").toLowerCase();
     const isPlan = options.forcePlanner
@@ -188,7 +196,7 @@ function getPlannerConfig(instruction, options = {}) {
 
     const provider = (process.env.PLANNER_PROVIDER || "auto").toLowerCase();
     const profile = (process.env.PLANNER_PROFILE || "fast").toLowerCase();
-    const overrideModel = process.env.PLANNER_MODEL;
+    const overrideModel = overridePlannerModel(options.plannerModelOverride) || process.env.PLANNER_MODEL;
 
     const model = overrideModel || selectPlannerModel(provider, profile);
     if (!model) return null;

@@ -3,14 +3,16 @@ const path = require('path');
 const simpleGit = require('simple-git');
 const { REPO_PATH, WORKTREE_ROOT } = require('../config/constants');
 
-function getWorktreePath(issueNumber) {
-    return path.join(WORKTREE_ROOT, `issue-${issueNumber}`);
+function getWorktreePath(issueNumber, worktreeRoot = WORKTREE_ROOT) {
+    return path.join(worktreeRoot, `issue-${issueNumber}`);
 }
 
-async function ensureWorktree(issueNumber, branch) {
-    const baseRepo = simpleGit(REPO_PATH);
-    const worktreePath = getWorktreePath(issueNumber);
-    fs.mkdirSync(WORKTREE_ROOT, { recursive: true });
+async function ensureWorktree(issueNumber, branch, options = {}) {
+    const repoPath = options.repoPath || REPO_PATH;
+    const worktreeRoot = options.worktreeRoot || WORKTREE_ROOT;
+    const baseRepo = simpleGit(repoPath);
+    const worktreePath = getWorktreePath(issueNumber, worktreeRoot);
+    fs.mkdirSync(worktreeRoot, { recursive: true });
 
     if (!fs.existsSync(worktreePath)) {
         await baseRepo.fetch().catch(() => {});
@@ -25,9 +27,11 @@ async function ensureWorktree(issueNumber, branch) {
     return worktreePath;
 }
 
-async function removeWorktree(issueNumber, branch) {
-    const baseRepo = simpleGit(REPO_PATH);
-    const worktreePath = getWorktreePath(issueNumber);
+async function removeWorktree(issueNumber, branch, options = {}) {
+    const repoPath = options.repoPath || REPO_PATH;
+    const worktreeRoot = options.worktreeRoot || WORKTREE_ROOT;
+    const baseRepo = simpleGit(repoPath);
+    const worktreePath = getWorktreePath(issueNumber, worktreeRoot);
 
     try {
         if (fs.existsSync(worktreePath)) {

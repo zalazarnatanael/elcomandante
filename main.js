@@ -1,6 +1,10 @@
 const { Octokit } = require("@octokit/rest");
 const simpleGit = require("simple-git");
 const { REPO_PATH, REPO_OWNER, REPO_NAME, LABELS } = require("./config/constants");
+const { projects } = require("./config/projects");
+const { classifyComplexity } = require("./services/complexityService");
+const { insertPlanHistory, getProjectSecrets, isDbConfigured } = require("./services/database");
+const { decrypt } = require("./services/encryptionService");
 const { runOpenCode } = require("./services/aiService");
 const { withRetry, classifyGithubError } = require("./services/githubRetry");
 const { sendTelegramMessage } = require("./services/telegramNotify");
@@ -71,38 +75,69 @@ async function gitPushWithRetry(gitClient, remote, branch, options = {}) {
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const git = simpleGit(REPO_PATH);
 
-async function updateLabels(issueNumber, newLabels) {
-    await withRetry(() => octokit.rest.issues.update({ owner: REPO_OWNER, repo: REPO_NAME, issue_number: issueNumber, labels: newLabels }));
+function resolveProjectConfig(input) {
+    if (!input) return projects[process.env.DEFAULT_PROJECT_ID || "proyecto-1"] || projects["proyecto-1"];
+    if (typeof input === "string") return projects[input];
+    if (input.projectId && projects[input.projectId]) return projects[input.projectId];
+    return input;
 }
 
-async function getIssueLabels(issueNumber) {
-    const { data: issue } = await withRetry(() => octokit.rest.issues.get({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
+async function recordPlanHistory(taskId, plan, complexity, attemptNumber) {
+    if (!isDbConfigured()) return;
+    await insertPlanHistory(taskId, plan, complexity, attemptNumber);
+}
+
+async function updateLabels(issueNumber, newLabels, context = {}) {
+    const owner = context.owner || REPO_OWNER;
+    const repo = context.repo || REPO_NAME;
+    const client = context.octokit || octokit;
+    await withRetry(() => client.rest.issues.update({ owner, repo, issue_number: issueNumber, labels: newLabels }));
+}
+
+async function getIssueLabels(issueNumber, context = {}) {
+    const owner = context.owner || REPO_OWNER;
+    const repo = context.repo || REPO_NAME;
+    const client = context.octokit || octokit;
+    const { data: issue } = await withRetry(() => client.rest.issues.get({
+        owner,
+        repo,
         issue_number: issueNumber
     }));
     return (issue.labels || []).map(l => typeof l === "string" ? l : l.name).filter(Boolean);
 }
 
-async function addIssueLabel(issueNumber, labelToAdd) {
-    const labels = await getIssueLabels(issueNumber);
+async function addIssueLabel(issueNumber, labelToAdd, context = {}) {
+    const labels = await getIssueLabels(issueNumber, context);
     if (!labels.includes(labelToAdd)) labels.push(labelToAdd);
-    await updateLabels(issueNumber, labels);
+    await updateLabels(issueNumber, labels, context);
 }
 
-async function removeIssueLabel(issueNumber, labelToRemove) {
-    const labels = await getIssueLabels(issueNumber);
+async function removeIssueLabel(issueNumber, labelToRemove, context = {}) {
+    const labels = await getIssueLabels(issueNumber, context);
     const next = labels.filter(l => l !== labelToRemove);
-    await updateLabels(issueNumber, next);
+    await updateLabels(issueNumber, next, context);
 }
 
-async function hasPlanComment(issueNumber) {
-    const { data: comments } = await withRetry(() => octokit.rest.issues.listComments({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
+async function hasPlanComment(issueNumber, context = {}) {
+    const owner = context.owner || REPO_OWNER;
+    const repo = context.repo || REPO_NAME;
+    const client = context.octokit || octokit;
+    const { data: comments } = await withRetry(() => client.rest.issues.listComments({
+        owner,
+        repo,
         issue_number: issueNumber
     }));
     return comments.some(c => c.body && c.body.includes("### 📋 Plan"));
+}
+
+async function loadProjectSecrets(projectId) {
+    if (!projectId || !isDbConfigured()) return {};
+    const result = await getProjectSecrets(projectId);
+    const secrets = {};
+    result.forEach(row => {
+        secrets[row.key_name] = decrypt(row.encrypted_value);
+    });
+    return secrets;
 }
 
 async function notifyFailure(issueNumber, stage, err, context = {}) {
@@ -123,8 +158,9 @@ async function notifyFailure(issueNumber, stage, err, context = {}) {
         body = `❌ No pude continuar en **${stage}**: ${info.message}`;
     }
 
+    const client = context.octokit || octokit;
     try {
-        await withRetry(() => octokit.rest.issues.createComment({
+        await withRetry(() => client.rest.issues.createComment({
             owner,
             repo,
             issue_number: issueNumber,
@@ -138,28 +174,52 @@ async function notifyFailure(issueNumber, stage, err, context = {}) {
     await sendTelegramMessage(telegramMessage);
 }
 
-async function runPlanFlow(issue) {
+async function runPlanFlow(issue, projectInput) {
     console.log(`🧠 [PLAN] #${issue.number}`);
     let workingAdded = false;
-    const sessionId = `ses-ferreteria-i${issue.number}-${Date.now()}`;
+    const projectConfig = resolveProjectConfig(projectInput) || {};
+    const sessionPrefix = projectConfig.id ? `${projectConfig.id}-` : "";
+    const sessionId = `ses-${sessionPrefix}i${issue.number}-${Date.now()}`;
     const traceId = issue.traceId || "";
+    let projectSecrets = {};
+    try {
+        projectSecrets = await loadProjectSecrets(projectConfig.id);
+    } catch (e) {
+        console.log(`⚠️ [PLAN] No se pudieron cargar secretos para ${projectConfig.id}: ${e.message}`);
+    }
+    const octokitClient = projectSecrets.GITHUB_TOKEN
+        ? new Octokit({ auth: projectSecrets.GITHUB_TOKEN })
+        : octokit;
+
     try {
         try {
-            await addIssueLabel(issue.number, LABELS.WORKING);
+            await addIssueLabel(issue.number, LABELS.WORKING, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
             workingAdded = true;
         } catch (e) {
             console.log(`⚠️ [PLAN] No se pudo agregar ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
         }
         const isNew = issue.labels.some(l => l.name === LABELS.NEW);
-        if (isNew && await hasPlanComment(issue.number)) {
+        if (isNew && await hasPlanComment(issue.number, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        })) {
             console.log(`ℹ️ [PLAN] Ya existe un plan para #${issue.number}. Se omite duplicado.`);
-            await addIssueLabel(issue.number, LABELS.WAITING_HUMAN);
+            await addIssueLabel(issue.number, LABELS.WAITING_HUMAN, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
             return;
         }
 
-        const { data: comments } = await withRetry(() => octokit.rest.issues.listComments({
-            owner: REPO_OWNER,
-            repo: REPO_NAME,
+        const { data: comments } = await withRetry(() => octokitClient.rest.issues.listComments({
+            owner: projectConfig.github?.owner || REPO_OWNER,
+            repo: projectConfig.github?.repo || REPO_NAME,
             issue_number: issue.number
         }));
 
@@ -175,32 +235,101 @@ async function runPlanFlow(issue) {
         }
 
         const instruction = buildPlanPrompt(issue, session, isNew);
-
-        const res = await runOpenCode(issue.number, instruction, false, { sessionId, continue: false, logSuffix: "plan", traceId });
-        session.plans.push({
-            createdAt: new Date().toISOString(),
-            body: res
+        const lastPlan = session.plans.length > 0 ? session.plans[session.plans.length - 1] : null;
+        const complexityHint = lastPlan?.complexity || "medium";
+        const planningModel = projectConfig?.models?.planning?.[complexityHint] || projectConfig?.models?.planning?.medium;
+        const res = await runOpenCode(issue.number, instruction, false, {
+            sessionId,
+            continue: false,
+            logSuffix: "plan",
+            traceId,
+            plannerModelOverride: planningModel
         });
+        const planEntry = {
+            createdAt: new Date().toISOString(),
+            body: res,
+            complexity: null
+        };
+        session.plans.push(planEntry);
         saveSession(issue.number, session);
-        if (isNew && await hasPlanComment(issue.number)) {
+        if (isNew && await hasPlanComment(issue.number, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        })) {
             console.log(`ℹ️ [PLAN] Plan ya publicado durante ejecución para #${issue.number}.`);
-            await addIssueLabel(issue.number, LABELS.WAITING_HUMAN);
-            await removeIssueLabel(issue.number, LABELS.WAITING_IA);
-            await removeIssueLabel(issue.number, LABELS.NEW);
-            await removeIssueLabel(issue.number, LABELS.WORKING);
+            await addIssueLabel(issue.number, LABELS.WAITING_HUMAN, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
+            await removeIssueLabel(issue.number, LABELS.WAITING_IA, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
+            await removeIssueLabel(issue.number, LABELS.NEW, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
+            await removeIssueLabel(issue.number, LABELS.WORKING, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
             return;
         }
-        await withRetry(() => octokit.rest.issues.createComment({ owner: REPO_OWNER, repo: REPO_NAME, issue_number: issue.number, body: res }));
-        await addIssueLabel(issue.number, LABELS.WAITING_HUMAN);
-        await removeIssueLabel(issue.number, LABELS.WAITING_IA);
-        await removeIssueLabel(issue.number, LABELS.NEW);
+        let complexity = "medium";
+        try {
+            const classifierModel = projectConfig?.models?.classifier || planningModel;
+            complexity = await classifyComplexity(issue.number, issue.title, res, { sessionId, traceId, model: classifierModel });
+        } catch (e) {
+            console.log(`⚠️ [PLAN] No se pudo clasificar complejidad en #${issue.number}: ${e.message}`);
+        }
+
+        planEntry.complexity = complexity;
+        saveSession(issue.number, session);
+
+        const planComment = `### 📋 Plan\n\n\`\`\`complexity\n${complexity}\n\`\`\`\n\n${res}`;
+        await withRetry(() => octokitClient.rest.issues.createComment({
+            owner: projectConfig.github?.owner || REPO_OWNER,
+            repo: projectConfig.github?.repo || REPO_NAME,
+            issue_number: issue.number,
+            body: planComment
+        }));
+        const attemptNumber = session.plans.length;
+        await recordPlanHistory(`issue-${issue.number}-${projectConfig.id || "default"}`, res, complexity, attemptNumber);
+        await addIssueLabel(issue.number, LABELS.WAITING_HUMAN, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
+        await removeIssueLabel(issue.number, LABELS.WAITING_IA, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
+        await removeIssueLabel(issue.number, LABELS.NEW, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
     } catch (err) {
         console.error(`❌ Error en #${issue.number}:`, err.message);
-        await notifyFailure(issue.number, 'PLAN', err);
+        await notifyFailure(issue.number, 'PLAN', err, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
     } finally {
         if (workingAdded) {
             try {
-                await removeIssueLabel(issue.number, LABELS.WORKING);
+                await removeIssueLabel(issue.number, LABELS.WORKING, {
+                    owner: projectConfig.github?.owner,
+                    repo: projectConfig.github?.repo,
+                    octokit: octokitClient
+                });
             } catch (e) {
                 console.log(`⚠️ [PLAN] No se pudo remover ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
             }
@@ -208,19 +337,36 @@ async function runPlanFlow(issue) {
     }
 }
 
-async function runBuildFlow(issue) {
+async function runBuildFlow(issue, projectInput) {
     console.log(`🛠️ [BUILD] #${issue.number}`);
     let workingAdded = false;
+    const projectConfig = resolveProjectConfig(projectInput) || {};
+    let projectSecrets = {};
+    try {
+        projectSecrets = await loadProjectSecrets(projectConfig.id);
+    } catch (e) {
+        console.log(`⚠️ [BUILD] No se pudieron cargar secretos para ${projectConfig.id}: ${e.message}`);
+    }
+    const octokitClient = projectSecrets.GITHUB_TOKEN
+        ? new Octokit({ auth: projectSecrets.GITHUB_TOKEN })
+        : octokit;
     try {
         try {
-            await addIssueLabel(issue.number, LABELS.WORKING);
+            await addIssueLabel(issue.number, LABELS.WORKING, {
+                owner: projectConfig.github?.owner,
+                repo: projectConfig.github?.repo,
+                octokit: octokitClient
+            });
             workingAdded = true;
         } catch (e) {
             console.log(`⚠️ [BUILD] No se pudo agregar ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
         }
         const branch = `task/issue-${issue.number}`;
 
-        const worktreePath = await ensureWorktree(issue.number, branch);
+        const worktreePath = await ensureWorktree(issue.number, branch, {
+            repoPath: projectConfig.repoPath,
+            worktreeRoot: projectConfig.worktreeRoot
+        });
         console.log(`🧰 [WORKTREE] #${issue.number} -> ${worktreePath}`);
         const worktreeGit = simpleGit(worktreePath);
         await worktreeGit.checkout(branch).catch(() => {});
@@ -235,17 +381,32 @@ async function runBuildFlow(issue) {
             }
         }
 
-        const { data: comments } = await withRetry(() => octokit.rest.issues.listComments({ owner: REPO_OWNER, repo: REPO_NAME, issue_number: issue.number }));
+        const { data: comments } = await withRetry(() => octokitClient.rest.issues.listComments({
+            owner: projectConfig.github?.owner || REPO_OWNER,
+            repo: projectConfig.github?.repo || REPO_NAME,
+            issue_number: issue.number
+        }));
         const session = loadSession(issue.number);
-        const lastPlan = session.plans.length > 0 ? session.plans[session.plans.length - 1].body : null;
+        const lastPlanEntry = session.plans.length > 0 ? session.plans[session.plans.length - 1] : null;
+        const lastPlan = lastPlanEntry ? lastPlanEntry.body : null;
         const plan = lastPlan || comments.reverse().find(c => c.body.includes("### 📋 Plan"))?.body || "Aplica cambios técnicos.";
+        const complexityHint = lastPlanEntry?.complexity || "medium";
 
         const planSummary = plan.replace(/\s+/g, " ").trim().slice(0, 500);
         console.log(`🧩 [CONTEXT] ${issue.title}`);
         console.log(`🧩 [CONTEXT] Plan: ${planSummary}${planSummary.length === 500 ? "…" : ""}`);
 
-        const sessionId = `ses-ferreteria-i${issue.number}-${Date.now()}`;
-        await runOpenCode(issue.number, `Sigue este plan:\n${plan}\n\nEJECUTA AHORA.`, true, { cwd: worktreePath, sessionId, continue: false, logSuffix: "build", traceId });
+        const sessionPrefix = projectConfig.id ? `${projectConfig.id}-` : "";
+        const sessionId = `ses-${sessionPrefix}i${issue.number}-${Date.now()}`;
+        const buildModel = projectConfig?.models?.build?.[complexityHint] || projectConfig?.models?.build?.medium;
+        await runOpenCode(issue.number, `Sigue este plan:\n${plan}\n\nEJECUTA AHORA.`, true, {
+            cwd: worktreePath,
+            sessionId,
+            continue: false,
+            logSuffix: "build",
+            traceId,
+            buildModelOverride: buildModel
+        });
 
         const status = await worktreeGit.status();
         if (status.files.length > 0) {
@@ -261,9 +422,9 @@ async function runBuildFlow(issue) {
             try {
                 console.log(`🧾 [PR] Creando PR para ${branch}`);
                 const prBody = buildPrBody(issue, plan);
-                const { data: pr } = await withRetry(() => octokit.rest.pulls.create({
-                    owner: REPO_OWNER,
-                    repo: REPO_NAME,
+                const { data: pr } = await withRetry(() => octokitClient.rest.pulls.create({
+                    owner: projectConfig.github?.owner || REPO_OWNER,
+                    repo: projectConfig.github?.repo || REPO_NAME,
                     title: `PR: ${issue.title}`,
                     head: branch,
                     base: "main",
@@ -272,10 +433,10 @@ async function runBuildFlow(issue) {
                 console.log(`✅ PR creado: ${pr.html_url}`);
             } catch (e) {
                 try {
-                    const { data: existingPrs } = await withRetry(() => octokit.rest.pulls.list({
-                        owner: REPO_OWNER,
-                        repo: REPO_NAME,
-                        head: `${REPO_OWNER}:${branch}`,
+                    const { data: existingPrs } = await withRetry(() => octokitClient.rest.pulls.list({
+                        owner: projectConfig.github?.owner || REPO_OWNER,
+                        repo: projectConfig.github?.repo || REPO_NAME,
+                        head: `${projectConfig.github?.owner || REPO_OWNER}:${branch}`,
                         state: "open"
                     }));
                     const existing = existingPrs[0];
@@ -284,9 +445,9 @@ async function runBuildFlow(issue) {
                         if (!body.includes(`Resolves #${issue.number}`) || !body.includes("## Summary")) {
                             const prBody = buildPrBody(issue, plan);
                             const mergedBody = body ? `${prBody}\n\n---\n\n${body}` : prBody;
-                            await withRetry(() => octokit.rest.pulls.update({
-                                owner: REPO_OWNER,
-                                repo: REPO_NAME,
+                            await withRetry(() => octokitClient.rest.pulls.update({
+                                owner: projectConfig.github?.owner || REPO_OWNER,
+                                repo: projectConfig.github?.repo || REPO_NAME,
                                 pull_number: existing.number,
                                 body: mergedBody.trim()
                             }));
@@ -303,9 +464,9 @@ async function runBuildFlow(issue) {
             const noChangesMsg = "⚠️ No se detectaron cambios para aplicar en este issue.";
             console.log(`⚠️ [BUILD] ${noChangesMsg}`);
             try {
-                await withRetry(() => octokit.rest.issues.createComment({
-                    owner: REPO_OWNER,
-                    repo: REPO_NAME,
+                await withRetry(() => octokitClient.rest.issues.createComment({
+                    owner: projectConfig.github?.owner || REPO_OWNER,
+                    repo: projectConfig.github?.repo || REPO_NAME,
                     issue_number: issue.number,
                     body: noChangesMsg
                 }));
@@ -314,14 +475,26 @@ async function runBuildFlow(issue) {
             }
             return;
         }
-        await updateLabels(issue.number, [LABELS.DONE]);
+        await updateLabels(issue.number, [LABELS.DONE], {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
     } catch (err) {
         console.error(`❌ Error en #${issue.number}:`, err.message);
-        await notifyFailure(issue.number, 'BUILD', err);
+        await notifyFailure(issue.number, 'BUILD', err, {
+            owner: projectConfig.github?.owner,
+            repo: projectConfig.github?.repo,
+            octokit: octokitClient
+        });
     } finally {
         if (workingAdded) {
             try {
-                await removeIssueLabel(issue.number, LABELS.WORKING);
+                await removeIssueLabel(issue.number, LABELS.WORKING, {
+                    owner: projectConfig.github?.owner,
+                    repo: projectConfig.github?.repo,
+                    octokit: octokitClient
+                });
             } catch (e) {
                 console.log(`⚠️ [BUILD] No se pudo remover ${LABELS.WORKING} en #${issue.number}: ${e.message}`);
             }

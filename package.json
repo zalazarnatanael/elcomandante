@@ -6,6 +6,7 @@
     "express": "^5.2.1",
     "notion-to-md": "^3.1.9",
     "openai": "^6.25.0",
+    "@supabase/supabase-js": "^2.49.1",
     "simple-git": "^3.32.3"
   }
 }
