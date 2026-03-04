@@ -17298,3 +17298,339 @@ APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b3
   additional_data: undefined,
   request_id: 'b33f070c-d0fd-4858-bc7d-fea0fedc1196'
 }
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: '140274fa-4ffd-42b4-b957-a69b980271bf'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:25:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72ebd0099ef17f-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-yagwTqR0kQNUtwe0k9wUiJwSksw"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '140274fa-4ffd-42b4-b957-a69b980271bf',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=fTxpj0jYOIxGwfwAGjkNgYl6I1y7OchEm_cnbn87rIY-1772648701-1.0.1.1-y0cQtL_Y8qOxf1FsVZ1vimkPITJ5opsEF1dt9PIqaJvqqcCyOJ5gU445UIcWzm6KXfgj4m02L7uunlOWzFaqltoLM.Q43f9gu7Hw73yJDNg; path=/; expires=Wed, 04-Mar-26 18:55:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=AJICsSatEcMF1XzeX.eHe8vn4xyYoFZrCOmuj4aeJ5A-1772648701725-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"140274fa-4ffd-42b4-b957-a69b980271bf"}',
+  additional_data: undefined,
+  request_id: '140274fa-4ffd-42b4-b957-a69b980271bf'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: 'c5e7d442-a0a7-442e-ae06-ab42cf9b797f'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:26:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72ed4aecb3a139-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-lYeq8vmvJIj+6Ud1jSOVYQ9i5Vs"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'c5e7d442-a0a7-442e-ae06-ab42cf9b797f',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=WJRPjnbpVLW0eCCvyGuxJ_nsd3d83blADyiIq0ce4tA-1772648762-1.0.1.1-qsVzFXf9n0JznGGCUTE9mrgYF.62ZnAoawbXohksm5i3cPY5ENAJauVyXyRb7YUm_Zudegqb56dfdCw4MwUih1AXcZQs_.1j083tFsOckOg; path=/; expires=Wed, 04-Mar-26 18:56:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=fEd8hrFr2Da02pqRAbqsUotdKTpzsewO0_N1oUrAPk8-1772648762488-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"c5e7d442-a0a7-442e-ae06-ab42cf9b797f"}',
+  additional_data: undefined,
+  request_id: 'c5e7d442-a0a7-442e-ae06-ab42cf9b797f'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: 'cebbf1dc-2c7b-4f0f-978f-fedd70e772b5'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:27:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72eec05dd4e1ea-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-AaUukGxNR50EqDbw9FZySpYFEKA"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'cebbf1dc-2c7b-4f0f-978f-fedd70e772b5',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=fptrgbgsGR85njEMrPy.U2G7RVb4EgPnPwXXVmRzRFk-1772648822-1.0.1.1-_GFZICkAt9znkaI_.4mN4MPj0dbnzbMSQhnEh6EOksWEH2xrMmTwkzCSHsCeonCzYCPBQ2GgBKLHV7gH4K2jOQFAaOMvfUqy47Sa4mCkmoU; path=/; expires=Wed, 04-Mar-26 18:57:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=A5fhxc3wjOwyE0zmT_zqV.0e9rmYBXNGDzwnXEBq8Po-1772648822060-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"cebbf1dc-2c7b-4f0f-978f-fedd70e772b5"}',
+  additional_data: undefined,
+  request_id: 'cebbf1dc-2c7b-4f0f-978f-fedd70e772b5'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: '10033a17-eadf-4023-8efb-ca3869b869c6'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:28:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72f034a91fcd97-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-IbWD9NAayK/nlh0czJbu09gxNPc"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '10033a17-eadf-4023-8efb-ca3869b869c6',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=sR4iSHIFIkWEjYYmMaAvuK8fAArkXG7jbPD4oP08vh8-1772648881-1.0.1.1-YMJgxWXu96x.B_ee7xbsg7A8XXzqVa0PgI8O1nndJNryJnbfVg7gJSWDEtIkskUJ_bpUoB85AJAU6gV6uU.3v4pUmuScPyU06R0Jxi1R.KQ; path=/; expires=Wed, 04-Mar-26 18:58:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=FP0oadQ_tuPy2CQA27Uu2Hh96ED1Bg1zU4Z7cLkLQ6A-1772648881790-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"10033a17-eadf-4023-8efb-ca3869b869c6"}',
+  additional_data: undefined,
+  request_id: '10033a17-eadf-4023-8efb-ca3869b869c6'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: '22f63cdd-7cce-48a1-98e1-82332c76acf5'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:29:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72f1b05e05bba0-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-Mh2k4QhIWErmptbAXUWiVhhqgmY"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '22f63cdd-7cce-48a1-98e1-82332c76acf5',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=p48YlcM09iyYvA3FcUxa.Nyh3Scea_b1_JNlvwsKx8s-1772648942-1.0.1.1-pRHJFVD_zQvEy7aLeS9Mdtyg5zHgDJ40WZIRiNgDyf2GQgMSW21MuiBB.IcGbmyUfjr4TTrOmCy8pH2zD1EXDlhDqfic3c63Nv2Gt4SDUdg; path=/; expires=Wed, 04-Mar-26 18:59:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=67hvKcvjUt8MINiT261H0S8x1ISZyJtOXjRuXWbVUUk-1772648942475-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"22f63cdd-7cce-48a1-98e1-82332c76acf5"}',
+  additional_data: undefined,
+  request_id: '22f63cdd-7cce-48a1-98e1-82332c76acf5'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: '666dbbdf-c22a-4218-934a-f3686b9e9ded'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:30:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72f3258839d5e6-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-Pf4ODMfPXpXHmBExYgwyhfxGIyo"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '666dbbdf-c22a-4218-934a-f3686b9e9ded',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=oyrqbKFCD3URnelYLUapNalj32Y2W31AxCy9T26dzx4-1772649002-1.0.1.1-Wjef277Qcch9FmW81dvDSYBgEGyNhfunBATcijHx4bH8ohBR5K36lsctqudByaCu5wMgaNzze4aixXw3yD3A_IcBxBhpyxSNKBW04X5rUrs; path=/; expires=Wed, 04-Mar-26 19:00:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=a69KKmtZNxyixiWaQ09byJVDftLDt.YbY_JXjAf3Yhs-1772649002203-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"666dbbdf-c22a-4218-934a-f3686b9e9ded"}',
+  additional_data: undefined,
+  request_id: '666dbbdf-c22a-4218-934a-f3686b9e9ded'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: '4d7c6618-06bb-423a-a434-ac401f60f50b'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:31:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72f49ad8eaa417-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-z6eDHpw+2VyeeEU1QlteTGe6lTQ"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '4d7c6618-06bb-423a-a434-ac401f60f50b',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=a4ey0XGbnuOeH8q_9UBx7zKmc1t.74rI_gPjoyENb3w-1772649061-1.0.1.1-m8N_wXToNozKDBeN8hKjbr3yFM_heiL.PmuOPPtuxr6sequsk2Fm1YRBEdp_.jhcjsKxKSllp7PDS5SOR_klI0WsWjS1ii2.ZhfMbzvRq6w; path=/; expires=Wed, 04-Mar-26 19:01:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=Ydv2ppSwi80tmOsF97w.Y1Lk1KrGdbWMHzT.RK2Y4Ks-1772649061876-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"4d7c6618-06bb-423a-a434-ac401f60f50b"}',
+  additional_data: undefined,
+  request_id: '4d7c6618-06bb-423a-a434-ac401f60f50b'
+}
+@notionhq/client warn: request fail {
+  code: 'object_not_found',
+  message: 'Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.',
+  attempt: 0,
+  requestId: 'e3bb8824-9dc9-478e-a719-357dad51b3ef'
+}
+APIResponseError: Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/create_github_issues_from_expanded.js:172:11) {
+  code: 'object_not_found',
+  status: 404,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:32:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'transfer-encoding': 'chunked',
+    connection: 'keep-alive',
+    'content-encoding': 'gzip',
+    'cf-ray': '9d72f6161cf1721c-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"10d-niQDUXfS59qIM2EuQCMrkQ2jrfA"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'e3bb8824-9dc9-478e-a719-357dad51b3ef',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=xrM4lQu2eTE3WmZUcIsHNX7AkVCaOWw3ceLzq3xhMBc-1772649122-1.0.1.1-WXyijV8M77yVCt2f_e9A1m_Q1rt8QPMi_5kHZYf80MQrUXSvxSmH6K1p544.a6JGmwjH1S5fwhB1qstHIDbe6vzvSxfEcvsdhQlfnc3o_IE; path=/; expires=Wed, 04-Mar-26 19:02:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=ULoMgPrW74gFHYwprhDgfAgMsx1lYvF0GE90jj6d8wQ-1772649122524-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    server: 'cloudflare',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: 3156faa4-f6d4-8157-a86d-000b37a54ffd. Make sure the relevant pages and databases are shared with your integration.","request_id":"e3bb8824-9dc9-478e-a719-357dad51b3ef"}',
+  additional_data: undefined,
+  request_id: 'e3bb8824-9dc9-478e-a719-357dad51b3ef'
+}

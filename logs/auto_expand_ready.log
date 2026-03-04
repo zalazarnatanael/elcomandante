@@ -15428,3 +15428,44 @@ APIResponseError: API token is invalid.
   additional_data: undefined,
   request_id: '07472fa1-4189-4a38-9192-339b04f0835e'
 }
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '07d63f9e-9824-4e92-b9fc-e43ea7fef332'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:30:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72f32599de01b0-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-/ICZXbwOvXU9ykD4Xh9km0+4yCM"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '07d63f9e-9824-4e92-b9fc-e43ea7fef332',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=yxHRJ7w3v_A2FFiWoo2SJY5qXUBqcbafzBhEpUlGzq4-1772649002-1.0.1.1-a4ia7WTIELoqiNLc.abTFewuRE3SWwe7dVcxpm4KNJklia40jOl9irzUifysckS7VS_R5B5OuQD9OdIGlrDV6wvgVlxyW0hjMcbqstAEEPw; path=/; expires=Wed, 04-Mar-26 19:00:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=S3mtuVMfDRn5F.uQMe50ccUP6GJ16LhJiUzuEBhs7hw-1772649002142-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"07d63f9e-9824-4e92-b9fc-e43ea7fef332"}',
+  additional_data: undefined,
+  request_id: '07d63f9e-9824-4e92-b9fc-e43ea7fef332'
+}
