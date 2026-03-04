@@ -141,8 +141,12 @@ async function main() {
   if (!OWNER || !REPO || !GH_TOKEN) {
     throw new Error("Missing GITHUB_OWNER / GITHUB_REPO / GITHUB_TOKEN env vars.");
   }
-  if (!process.env.NOTION_DATABASE_ID) {
-    throw new Error("Missing NOTION_DATABASE_ID env var.");
+  const notionDatabaseId =
+    process.env.NOTION_DATABASE_ID_FERRETERIA || process.env.NOTION_DATABASE_ID;
+  if (!notionDatabaseId) {
+    throw new Error(
+      "Missing NOTION_DATABASE_ID_FERRETERIA or NOTION_DATABASE_ID env var."
+    );
   }
 
   const limit = Number(process.env.CREATE_ISSUES_LIMIT || 3);
@@ -161,12 +165,12 @@ async function main() {
   let res;
   if (notion.databases?.query) {
     res = await notion.databases.query({
-      database_id: process.env.NOTION_DATABASE_ID,
+      database_id: notionDatabaseId,
       ...queryArgs,
     });
   } else if (notion.dataSources?.query) {
     res = await notion.dataSources.query({
-      data_source_id: process.env.NOTION_DATABASE_ID,
+      data_source_id: notionDatabaseId,
       ...queryArgs,
     });
   } else {

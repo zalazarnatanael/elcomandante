@@ -1,0 +1,118 @@
+{
+  "issueNumber": 139,
+  "lastCommentId": 3994916188,
+  "plans": [
+    {
+      "createdAt": "2026-03-04T01:30:05.949Z",
+      "body": "M components/landing/hero-section.tsx\n### 📋 Plan\n- Localizar el título principal del home (Hero).\n- Reemplazar el texto “El futuro es hoy viejo” por “Tu ferreteria”.\n- Verificar que no haya otras instancias del mismo copy en el home.\nListo: actualicé el título del hero en `components/landing/hero-section.tsx`.\nSugerencias de siguiente paso:\n1) Revisar el home en el navegador para validar el cambio visual (`npm run dev`).\n2) Si querés, puedo ajustar acentos (“ferretería”) o capitalización según tu estilo de marca."
+    },
+    {
+      "createdAt": "2026-03-04T02:39:48.693Z",
+      "body": "1152 |     const provider = s.providers[providerID]\n1153 |     if (!provider) {\n1154 |       const availableProviders = Object.keys(s.providers)\n1155 |       const matches = fuzzysort.go(providerID, availableProviders, { limit: 3, threshold: -10000 })\n1156 |       const suggestions = matches.map((m) => m.target)\n1157 |       throw new ModelNotFoundError({ providerID, modelID, suggestions })\n                   ^\nProviderModelNotFoundError: ProviderModelNotFoundError\n data: {\n  providerID: \"gemini-1.5-flash\",\n  modelID: \"\",\n  suggestions: [],\n},\n      at getModel (src/provider/provider.ts:1157:13)\nError: Model not found: gemini-1.5-flash/."
+    },
+    {
+      "createdAt": "2026-03-04T02:45:15.644Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19796, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "createdAt": "2026-03-04T02:46:32.547Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19741, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "createdAt": "2026-03-04T02:48:44.827Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19568, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "createdAt": "2026-03-04T02:52:36.350Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19568, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "createdAt": "2026-03-04T02:54:51.052Z",
+      "body": "Entendido. Actualizo el plan técnico basándome en el feedback:\n1.  **Cambio de Título:** Actualizar el título principal de la aplicación a \"Tu super ferretería\" en el componente correspondiente (probablemente `app/page.tsx` o `app/layout.tsx`).\n2.  **Optimización de Contexto:** Reducir el tamaño de las solicitudes y mensajes para evitar errores de límite de tokens (TPM) en el modelo.\n3.  **Verificación de Estilo:** Asegurar que el nuevo título mantenga la estética de diseño establecida con Tailwind CSS y los tokens del proyecto.\n4.  **Validación Técnica:** Ejecutar `npm run lint` y `npx tsc --noEmit` para garantizar la integridad del código tras el cambio.\n¿Procedo con la implementación del cambio de título?"
+    },
+    {
+      "createdAt": "2026-03-04T02:55:53.302Z",
+      "body": "Entendido. Actualizo el plan técnico para reflejar el cambio de título solicitado:\n1.  **Cambio de Título:** Actualizar el título principal de la aplicación a \"Tu super ferreteria de nat\" en `app/page.tsx` o `app/layout.tsx`.\n2.  **Verificación de Estilo:** Asegurar que el nuevo título mantenga la estética de diseño establecida con Tailwind CSS y los tokens del proyecto.\n3.  **Validación Técnica:** Ejecutar `npm run lint` y `npx tsc --noEmit` para garantizar la integridad del código tras el cambio.\n¿Procedo con la implementación?"
+    }
+  ],
+  "feedback": [
+    {
+      "id": 3994871547,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:39:43Z",
+      "body": "Vamos a cambiarlo a \"Tu super ferreteria\""
+    },
+    {
+      "id": 3994871764,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:39:49Z",
+      "body": "1152 |     const provider = s.providers[providerID]\n1153 |     if (!provider) {\n1154 |       const availableProviders = Object.keys(s.providers)\n1155 |       const matches = fuzzysort.go(providerID, availableProviders, { limit: 3, threshold: -10000 })\n1156 |       const suggestions = matches.map((m) => m.target)\n1157 |       throw new ModelNotFoundError({ providerID, modelID, suggestions })\n                   ^\nProviderModelNotFoundError: ProviderModelNotFoundError\n data: {\n  providerID: \"gemini-1.5-flash\",\n  modelID: \"\",\n  suggestions: [],\n},\n      at getModel (src/provider/provider.ts:1157:13)\nError: Model not found: gemini-1.5-flash/."
+    },
+    {
+      "id": 3994886471,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:45:09Z",
+      "body": "Cambiemos el titulo   a \"Tu super ferreteria\"\n\n"
+    },
+    {
+      "id": 3994886758,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:45:15Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19796, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "id": 3994889871,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:46:25Z",
+      "body": "Cambiemos el titulo a \"Tu super ferreteria\"\n\n"
+    },
+    {
+      "id": 3994890225,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:46:32Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19741, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "id": 3994895919,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:48:38Z",
+      "body": "Cambiemos el titulo a \"Tu super ferreteria\"\n\n"
+    },
+    {
+      "id": 3994896232,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:48:45Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19568, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "id": 3994906939,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:52:29Z",
+      "body": "Cambiemos el titulo a \"Tu super ferreteria\"\n\n"
+    },
+    {
+      "id": 3994907336,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:52:36Z",
+      "body": "Error: Request too large for model `llama-3.1-8b-instant` in organization `org_01kjvb980dfh3vzsc48s9ssccw` service tier `on_demand` on tokens per minute (TPM): Limit 6000, Requested 19568, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing"
+    },
+    {
+      "id": 3994913328,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:54:42Z",
+      "body": "Cambiemos el titulo a \"Tu super ferreteria\"\n\n"
+    },
+    {
+      "id": 3994913760,
+      "author": "zatogaming404-bot",
+      "createdAt": "2026-03-04T02:54:51Z",
+      "body": "Entendido. Actualizo el plan técnico basándome en el feedback:\n1.  **Cambio de Título:** Actualizar el título principal de la aplicación a \"Tu super ferretería\" en el componente correspondiente (probablemente `app/page.tsx` o `app/layout.tsx`).\n2.  **Optimización de Contexto:** Reducir el tamaño de las solicitudes y mensajes para evitar errores de límite de tokens (TPM) en el modelo.\n3.  **Verificación de Estilo:** Asegurar que el nuevo título mantenga la estética de diseño establecida con Tailwind CSS y los tokens del proyecto.\n4.  **Validación Técnica:** Ejecutar `npm run lint` y `npx tsc --noEmit` para garantizar la integridad del código tras el cambio.\n¿Procedo con la implementación del cambio de título?"
+    },
+    {
+      "id": 3994916188,
+      "author": "zalazarnatanael",
+      "createdAt": "2026-03-04T02:55:45Z",
+      "body": "Cambiemos el titulo a \"Tu super ferreteria de nat\"\n\n"
+    }
+  ]
+}

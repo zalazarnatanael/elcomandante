@@ -31,6 +31,9 @@ const traceIds = new Map();
 const labelCooldowns = new Map();
 const SESSION_DIR = path.join(__dirname, 'session_logs');
 
+const NOTION_DATABASE_ID =
+    process.env.NOTION_DATABASE_ID_FERRETERIA || process.env.NOTION_DATABASE_ID;
+
 function buildTaskKey(task) {
     const id = task.issueNumber || task.number || 'unknown';
     return `${task.name}:${id}`;
@@ -155,6 +158,36 @@ function extractNotionLinkFromIssue(issue) {
     if (!issue || typeof issue.body !== 'string') return null;
     const match = issue.body.match(/Notion:\s*(https?:\/\/\S+)/i);
     return match ? match[1] : null;
+}
+
+async function findNotionPageIdByIssueUrl(issueUrl) {
+    if (!issueUrl || !NOTION_DATABASE_ID) return null;
+
+    const queryArgs = {
+        filter: {
+            property: "GitHub Issue URL",
+            url: { equals: issueUrl }
+        },
+        page_size: 1
+    };
+
+    if (notion.databases?.query) {
+        const res = await notion.databases.query({
+            database_id: NOTION_DATABASE_ID,
+            ...queryArgs
+        });
+        return res?.results?.[0]?.id || null;
+    }
+
+    if (notion.dataSources?.query) {
+        const res = await notion.dataSources.query({
+            data_source_id: NOTION_DATABASE_ID,
+            ...queryArgs
+        });
+        return res?.results?.[0]?.id || null;
+    }
+
+    return null;
 }
 
 function loadSession(issueNumber) {
@@ -305,8 +338,13 @@ async function handlePrClosed(pr) {
     await removeWorktree(issueNumber, branch);
 
     try {
-        const notionPageId = extractNotionPageIdFromIssue(issueRes.data);
+        let notionPageId = extractNotionPageIdFromIssue(issueRes.data);
         const notionLink = extractNotionLinkFromIssue(issueRes.data);
+
+        if (!notionPageId && NOTION_DATABASE_ID) {
+            notionPageId = await findNotionPageIdByIssueUrl(issueRes.data?.html_url);
+        }
+
         if (notionPageId) {
             await notion.pages.update({
                 page_id: notionPageId,
