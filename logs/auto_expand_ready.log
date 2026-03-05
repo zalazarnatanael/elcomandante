@@ -14731,3 +14731,741 @@ APIResponseError: API token is invalid.
   additional_data: undefined,
   request_id: '18e8f4c6-abb7-408e-8c94-f67eea257a71'
 }
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'f349b28f-ff8e-40e6-b1bb-90234faf5f84'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 14:15:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d717d9f09aec131-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-9ZEeAo0x+26TFO+UN3W+Wo+Y5PE"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'f349b28f-ff8e-40e6-b1bb-90234faf5f84',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=2pp0Q4W.ZrEKBYrMaVVzkgxXvf0Quhjn4Io_LhP0PTk-1772633702-1.0.1.1-HguvLmJ1hv6Z99u_5enX7EATBLkCexDPXtG4I2kEjnlfN8pE8U5nTqVD6pWafUBVG7Nfqr0DttWOurB7QRYxt4DtpockwQsegnAFT_zstMU; path=/; expires=Wed, 04-Mar-26 14:45:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=zJ6qpFKXjsTDWRwauB0eUheYncBf1QdKhwYJrR5E_P8-1772633702487-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"f349b28f-ff8e-40e6-b1bb-90234faf5f84"}',
+  additional_data: undefined,
+  request_id: 'f349b28f-ff8e-40e6-b1bb-90234faf5f84'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '4b0a237c-27a8-4952-ab7f-d18d7dfcf0a2'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 14:30:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d71939359faf1ff-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-pIQeSnYFreAP5FmjWLzc/wfsZEg"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '4b0a237c-27a8-4952-ab7f-d18d7dfcf0a2',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=eQFNhsfFxjme04ZowHm6zSyBQvaivWg5gh32lWB0r98-1772634601-1.0.1.1-LGRpQg7MH7ycAO0YDin4Yoj3v.HNrVx9WzeZJ_IddUz888sja_MA.ayshh11NGucT8B6cZ7H4.nMfnxqQzsE7UcqWqBG8gGifM09LfM2CnE; path=/; expires=Wed, 04-Mar-26 15:00:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=ahwESGaNdtzf.LxpHpFvrnM_ipuuG6yagkBAg1CuDWk-1772634601740-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"4b0a237c-27a8-4952-ab7f-d18d7dfcf0a2"}',
+  additional_data: undefined,
+  request_id: '4b0a237c-27a8-4952-ab7f-d18d7dfcf0a2'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'c69ec046-a922-4acb-83ed-36272b673582'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 14:45:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d71a98afa0752d2-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-jiDi7CXEVDTtFYsTmnQStXbdGro"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'c69ec046-a922-4acb-83ed-36272b673582',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=haIWVz4di.zXVyu7l2I1RqyGj3rGZ9NYbKak.mn_ohI-1772635501-1.0.1.1-8YJ1pSphJtMJk7PaM.lZIUcToGwwXU.I6sigccYz0NJnER0cgsk4vGt6IIS6AqJIYPcTt67uYBti14_91U1ncaIIn2H1g9IjqbFHqCq2SNc; path=/; expires=Wed, 04-Mar-26 15:15:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=ayaYCAlOb7BgH9Cd3hW_W4GGXbfNoo8_s22fzE0QOHc-1772635501516-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"c69ec046-a922-4acb-83ed-36272b673582"}',
+  additional_data: undefined,
+  request_id: 'c69ec046-a922-4acb-83ed-36272b673582'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'aed6578d-d9a4-4090-bd47-163c6f475ef9'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 15:00:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d71bf87a8a55b6b-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-a5VMBv7d2nr5gacmSSiOVWmK7c4"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'aed6578d-d9a4-4090-bd47-163c6f475ef9',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=3TvliKdb0Wv1bZjLexKZWxvzclA40Ul8VPyewgy_M5g-1772636402-1.0.1.1-sEJg8OmInMeSv.m38NmhO.0Zy61hzjX7nY11G2W34OtVHtzRPUamBBYRAGB2T_Or9IBr3030rhBKAbhI4ktliiKb3Wo3qgcHWltNI81gjuA; path=/; expires=Wed, 04-Mar-26 15:30:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=URxvyF7sy7wrQvaHa1tcE_mI1rxZUlLWoiWeKglSoag-1772636402125-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"aed6578d-d9a4-4090-bd47-163c6f475ef9"}',
+  additional_data: undefined,
+  request_id: 'aed6578d-d9a4-4090-bd47-163c6f475ef9'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '22281581-b6d9-48fe-b21d-e7508d73a5f0'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 15:15:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d71d57fcdd9d8ee-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-1AntEfGwmxvq5pxDI7y5NSJvYGI"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '22281581-b6d9-48fe-b21d-e7508d73a5f0',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=_MQdPcDN9p2Zn.eujaQTQ_1HMPko8j.O7l6fu.jlysE-1772637301-1.0.1.1-RJ7tR4cAA12V8bTt_lXy94wLhwHJ_GYvYwu_yqecm7ttQ5T9bJLdgAKjw7n7TKlz.D0Jkg5L.0ljOXfJQJM1vttTvCpLzpKgcSi2F6B4dd8; path=/; expires=Wed, 04-Mar-26 15:45:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=GobYh5uJM6N9nym_A4Q9Ojr0Lu4QBg9FRlr.98ERmis-1772637301952-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"22281581-b6d9-48fe-b21d-e7508d73a5f0"}',
+  additional_data: undefined,
+  request_id: '22281581-b6d9-48fe-b21d-e7508d73a5f0'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'cd19380a-8104-4428-bd31-f16457ae449d'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 15:30:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d71eb7638a1c504-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-RgZabu7yt4Gsh1D0x7m0AC+XzNY"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'cd19380a-8104-4428-bd31-f16457ae449d',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=dE94wo7azuvkUQIuD0LMbvXCPhnFL6jtUJh96vq1QYQ-1772638201-1.0.1.1-2hQUuDWLp2xQX8FrTDtJxWmimN559sm.av0iAc5u0h_lp6d4VACXMNjVmS1NVcDSBXNgm0_TEv72AQwR_Bf_bfTSxvLGZJORnES9fqj61RQ; path=/; expires=Wed, 04-Mar-26 16:00:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=M4jU2Sl.GMGgmph4F5uWvx565BBbG8kNAbR6iAr7F3E-1772638201569-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"cd19380a-8104-4428-bd31-f16457ae449d"}',
+  additional_data: undefined,
+  request_id: 'cd19380a-8104-4428-bd31-f16457ae449d'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'e75ef07c-8521-4e4c-9808-41c227602db0'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 15:45:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72016ee89efbee-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-2jFi06oRyIvg3xdpMiRMIftfApc"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'e75ef07c-8521-4e4c-9808-41c227602db0',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=pZjtjOgIBvYszFZ9lV.aVkUgJa9.chrc52qbhx7Ml_U-1772639102-1.0.1.1-mWGQxZ7mKZ82uloOr0XOIJfjpxrW2KuH_s9_9GnoSfLzuvTbpOMmXQtyyznd.9LINCY1Po0ewkqfyxHud8dSKzxzDgJlD2KvfU5.lM2Qhak; path=/; expires=Wed, 04-Mar-26 16:15:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=313Yv_ul_p7NxVlyRu9lsKLuqSWoNTYc5C8hQ2fllAQ-1772639102113-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"e75ef07c-8521-4e4c-9808-41c227602db0"}',
+  additional_data: undefined,
+  request_id: 'e75ef07c-8521-4e4c-9808-41c227602db0'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '63aaaa2c-6127-478b-9afd-681ce587d610'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 16:00:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d7217696c9d0305-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-IfleBGYPl0RgT1Znw8E/IYMV8bc"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '63aaaa2c-6127-478b-9afd-681ce587d610',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=GxBmeNV_5QgXTc3jleWNZkVaJTk1a7g15.TIL8cDrvI-1772640001-1.0.1.1-cKwcIERwZpDEUp..8DS3Z2CktOC4asGlto7aUx1VeTYwyTXJf6IkalDbDDRsJRxv53.ayFs9vLmZwWxc8dVQ5MUfuKV2_3Rw8X_obURxf60; path=/; expires=Wed, 04-Mar-26 16:30:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=.KrRrujipImN9_.TWiusACPlzyiqlXk2XdhKJlG5LE4-1772640001763-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"63aaaa2c-6127-478b-9afd-681ce587d610"}',
+  additional_data: undefined,
+  request_id: '63aaaa2c-6127-478b-9afd-681ce587d610'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '4bae44dc-c3e5-4159-bcfe-ea6e940bccf0'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 16:15:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d722d652bc2a6c6-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-lNEDXU4s1Oe9c9ss6WlgUjIeNu0"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '4bae44dc-c3e5-4159-bcfe-ea6e940bccf0',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=djcSOdcqJxo95I37G5c2ZJWgj8uEpOIzsKZgA80oDxA-1772640902-1.0.1.1-5uViLyIZuNq9jGOVX1FoYAz4zBTAU1AZd_7YDGf2ZX35eukvWAT89NfsPQnaa5OLn2BNZbZi..8R6A2uKFAuUC7qXMHNhBostRyp0jK6Q9o; path=/; expires=Wed, 04-Mar-26 16:45:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=RwXAyyAJDAquaN4yaTQJSaJ_hdDZMFjj_yNt_lSq66I-1772640902238-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"4bae44dc-c3e5-4159-bcfe-ea6e940bccf0"}',
+  additional_data: undefined,
+  request_id: '4bae44dc-c3e5-4159-bcfe-ea6e940bccf0'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '0d95ba83-27ef-44d7-ab7e-ac00d26867e8'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 16:30:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72435e4f1df1bb-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-7z6lgfVdvlF/x8hahicNkh2MWJE"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '0d95ba83-27ef-44d7-ab7e-ac00d26867e8',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=eiij0Rin49tZmjq4mB.S0tdbgi6zzmcoyA0B3GBQ390-1772641802-1.0.1.1-Z4sTbXoxo1gq_yDuowSQnq08fgpGxB8fcvUD3NO8YhCdP7VYK3D3oLHrUU50e8zU2E6fs6cqANWyzZlTyCEe3Y8GeQkn4Y19pPNMTS4nsi8; path=/; expires=Wed, 04-Mar-26 17:00:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=FQrPL.Zfd3TZgFSuZELUGQs4ZJ8wYTzd9GrctDqKxN4-1772641802238-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"0d95ba83-27ef-44d7-ab7e-ac00d26867e8"}',
+  additional_data: undefined,
+  request_id: '0d95ba83-27ef-44d7-ab7e-ac00d26867e8'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '98e38e7d-a23c-482f-8c5c-416120bab145'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 16:45:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d7259570f0dcef0-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-wLsnjQr4UBEtpQJlYUc+PqU1uvI"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '98e38e7d-a23c-482f-8c5c-416120bab145',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=pcbc9ozXNUZn3nlL0mBkHDMIoYmFzknu_blyDnjzwQ8-1772642702-1.0.1.1-Bm65A4IBAZ3xKMkEObfVLeTj9plmpeGYk2OC4wxsFNHgGD1zqygLSBMB2abnl4rIiSgzHZr2cr7WFhEcgSo_6y9xzHLoreoHSxkDKfcXOG8; path=/; expires=Wed, 04-Mar-26 17:15:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=zAr.PvCrnrLpdaJxCXo76s72AEK01wfcESZalVBvfoc-1772642702181-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"98e38e7d-a23c-482f-8c5c-416120bab145"}',
+  additional_data: undefined,
+  request_id: '98e38e7d-a23c-482f-8c5c-416120bab145'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '29279d79-be29-49bd-bbb9-2fb6b619dc08'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 17:00:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d726f4ea9509a86-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-fKlCRVgYqTpNvnS5PFpc+3p+SzI"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '29279d79-be29-49bd-bbb9-2fb6b619dc08',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=pVzo3OpydtBXLJrmJid5acirX2VzSHFKR.pcCX55Wvw-1772643601-1.0.1.1-r1LpsoiLK6J0PPXCcz_3j_nexs4xoARR3I9fOmrTZcoLPstQES4vSFqcl8.CdCBJisuL_brTg68GZ85zsBEPphgJb2TrlZ5JAi.BUrOE44E; path=/; expires=Wed, 04-Mar-26 17:30:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=hgcsTqdCjDUD2.lK.iR9Wu7nYezNbIGGzNitDARfNSQ-1772643601956-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"29279d79-be29-49bd-bbb9-2fb6b619dc08"}',
+  additional_data: undefined,
+  request_id: '29279d79-be29-49bd-bbb9-2fb6b619dc08'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '1fd58d3e-44de-4344-8eb2-c65ec65f1a1f'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 17:15:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d7285482fba480d-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-33y/iYsffRl5n9B+NjwDD3HDUiA"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '1fd58d3e-44de-4344-8eb2-c65ec65f1a1f',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=46hjMwcJYBgkichJ5sCC4BfKcJ.FDzZrZ2hXbNTtnRY-1772644502-1.0.1.1-Dlp3LGnZW1BtC.MoVSCkz7KwAKzJSzO.gi5pRiINuuVk9J1g1hdVRDZndNRM2B9FlTG4K_aGUC.mmFupTAgKCkhJiuUGBoE6M5yCI4AKnBM; path=/; expires=Wed, 04-Mar-26 17:45:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=mbAYdc5KBFIjcB.VEBsp9ZGyOEzefa65Ivt4RvpNlx0-1772644502047-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"1fd58d3e-44de-4344-8eb2-c65ec65f1a1f"}',
+  additional_data: undefined,
+  request_id: '1fd58d3e-44de-4344-8eb2-c65ec65f1a1f'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '0099ad0d-ad6f-4d42-9cc8-c44705a70b5a'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 17:30:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d729b437d27f1d5-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-kdhz6lEsvjpqbya4YFzb4C31V7g"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '0099ad0d-ad6f-4d42-9cc8-c44705a70b5a',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=xghOiq166rL8zspkcuV1h9RLBjBRz6IqrDR6Efn0PfU-1772645402-1.0.1.1-emwNNhtO0Cnm22EtZVKehyIN7NAxEm.WndPBumG5xcfOsEOTmqpjLqtXpobJ7bROSiegiAU_UIDuvbiupdgXrPNHLnLeGsIrAtUqryafNnk; path=/; expires=Wed, 04-Mar-26 18:00:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=BDduGPj2vHOUJFQC_GDnL.zHIBeLk3E3bCc8Iwoer2A-1772645402443-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"0099ad0d-ad6f-4d42-9cc8-c44705a70b5a"}',
+  additional_data: undefined,
+  request_id: '0099ad0d-ad6f-4d42-9cc8-c44705a70b5a'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: 'cc1db857-a8d7-4cdf-bd18-174141cd0467'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 17:45:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72b13c4fea1e65-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-DRnOt8C314/rrImzP+Pnzggeiis"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': 'cc1db857-a8d7-4cdf-bd18-174141cd0467',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=wUT4IXxXOVRRe5VdTMCFIRRXGxoouB3Glb5oGAGjrbo-1772646302-1.0.1.1-EGXoVY6YCyuolD4t3nJrkHdg6oz0iyP8TjZ8VZP2NmMCG.5vNDf.0KbPAYsOulYC8KCDcf9vYzoNugovlctwBvWVSLjnuj.KHl5ALCZDfRg; path=/; expires=Wed, 04-Mar-26 18:15:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=9YogvoZaZfYMxfKZrjlXxIaOzg0RUfk6_8pVp5wsWRQ-1772646302365-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"cc1db857-a8d7-4cdf-bd18-174141cd0467"}',
+  additional_data: undefined,
+  request_id: 'cc1db857-a8d7-4cdf-bd18-174141cd0467'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '37bd4b5f-b950-45d8-be1b-176e15a5a23e'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:00:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72c731ad17f1e1-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-4UPx/Q8GpsqTDIOvJ8NgV3CnAXQ"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '37bd4b5f-b950-45d8-be1b-176e15a5a23e',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=HryqE3KjBmsO1X4gk.96LCMyBfc94wRR39beKbeZqE8-1772647201-1.0.1.1-qCa3OY5EtplQM.0jexzayfvIXxRD2PSixsEw93cN1RYwy3BzwkVMEAcNaWk8_ivuWLtI1vS.O5VGGyMCj5P2C02P7Ep6NhApetU2PRh9Zek; path=/; expires=Wed, 04-Mar-26 18:30:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=8G7JZy16zm1l0KqURs_v2KGPoziF3s3NFMJsLB8sL9Q-1772647201784-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"37bd4b5f-b950-45d8-be1b-176e15a5a23e"}',
+  additional_data: undefined,
+  request_id: '37bd4b5f-b950-45d8-be1b-176e15a5a23e'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '07472fa1-4189-4a38-9192-339b04f0835e'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:15:01 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72dd2a38b57e1d-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-xvja02Kwr6LjWfd27CUZ2bFbvTU"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '07472fa1-4189-4a38-9192-339b04f0835e',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=4FIBzvbVLPsfz1GTFjZ3JGmJkwFlg02RMebGG56awmc-1772648101-1.0.1.1-E4wrLrPSjZUXSv36kAr18f3AESVOK1A1R881TBueaSZgUL5EGXD8fdOXQPHEEevTFW0.HaQonMtVNmVsjGVGPz3wp7jzYBJVQK_Zq0dTofo; path=/; expires=Wed, 04-Mar-26 18:45:01 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=mu6VEcgYeweh_SN9eKbkPngr.Z_38DW5L_cSnOPCXN0-1772648101809-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"07472fa1-4189-4a38-9192-339b04f0835e"}',
+  additional_data: undefined,
+  request_id: '07472fa1-4189-4a38-9192-339b04f0835e'
+}
+@notionhq/client warn: request fail {
+  code: 'unauthorized',
+  message: 'API token is invalid.',
+  attempt: 0,
+  requestId: '07d63f9e-9824-4e92-b9fc-e43ea7fef332'
+}
+APIResponseError: API token is invalid.
+    at buildRequestError (/root/.openclaw/node_modules/@notionhq/client/build/src/errors.js:212:16)
+    at Client.executeSingleRequest (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:692:50)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Client.executeWithRetry (/root/.openclaw/node_modules/@notionhq/client/build/src/Client.js:650:24)
+    at async main (/root/.openclaw/scripts/auto_expand_ready.js:183:11) {
+  code: 'unauthorized',
+  status: 401,
+  headers: Headers {
+    date: 'Wed, 04 Mar 2026 18:30:02 GMT',
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': '139',
+    connection: 'keep-alive',
+    server: 'cloudflare',
+    'cf-ray': '9d72f32599de01b0-GRU',
+    'cf-cache-status': 'DYNAMIC',
+    etag: 'W/"8b-/ICZXbwOvXU9ykD4Xh9km0+4yCM"',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    vary: 'Accept-Encoding',
+    'content-security-policy': "default-src 'none'",
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'x-content-type-options': 'nosniff',
+    'x-dns-prefetch-control': 'off',
+    'x-download-options': 'noopen',
+    'x-frame-options': 'SAMEORIGIN',
+    'x-notion-request-id': '07d63f9e-9824-4e92-b9fc-e43ea7fef332',
+    'x-permitted-cross-domain-policies': 'none',
+    'x-xss-protection': '0',
+    'set-cookie': '__cf_bm=yxHRJ7w3v_A2FFiWoo2SJY5qXUBqcbafzBhEpUlGzq4-1772649002-1.0.1.1-a4ia7WTIELoqiNLc.abTFewuRE3SWwe7dVcxpm4KNJklia40jOl9irzUifysckS7VS_R5B5OuQD9OdIGlrDV6wvgVlxyW0hjMcbqstAEEPw; path=/; expires=Wed, 04-Mar-26 19:00:02 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None, _cfuvid=S3mtuVMfDRn5F.uQMe50ccUP6GJ16LhJiUzuEBhs7hw-1772649002142-0.0.1.1-604800000; path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None',
+    'alt-svc': 'h3=":443"; ma=86400'
+  },
+  body: '{"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"07d63f9e-9824-4e92-b9fc-e43ea7fef332"}',
+  additional_data: undefined,
+  request_id: '07d63f9e-9824-4e92-b9fc-e43ea7fef332'
+}

@@ -1,0 +1,293 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           OPENCLAW - RESUMEN EJECUTIVO DEL ANÁLISIS EXHAUSTIVO               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 ESTADÍSTICAS DEL PROYECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Líneas de Código Principal:   ~2,000 LOC
+  Archivos Core Services:       6 archivos
+  Servicios Auxiliares:         6 módulos
+  Total Proyectos Soportados:   1 (single-project)
+  Tamaño Total:                 4.8M
+  Logs Acumulados:              1.8M (sin rotación)
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 ARCHIVOS PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. webhook-server.js (535 LOC)         ⭐⭐⭐ CRÍTICO
+     └─ Recibe webhooks GitHub
+     └─ Sistema de colas FIFO
+     └─ Entry point del bot
+     
+  2. main.js (332 LOC)                   ⭐⭐⭐ CRÍTICO
+     └─ runPlanFlow() - Análisis
+     └─ runBuildFlow() - Implementación
+     
+  3. services/aiService.js (363 LOC)    ⭐⭐⭐ CRÍTICO
+     └─ Integración OpenCode
+     └─ Cadena de fallbacks (3 modelos)
+     └─ Detección de violaciones
+     
+  4. services/sessionContext.js (157 LOC) ⭐⭐
+     └─ Persistencia JSON
+     └─ Contexto historico
+     
+  5. services/executionStateManager.js (176 LOC) ⭐⭐
+     └─ Tracking de ejecución
+     └─ Prevención de loops
+     
+  6. services/worktreeManager.js (60 LOC) ⭐⭐
+     └─ Git isolation
+     └─ Per-issue directories
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 FLUJO NOTION → GITHUB → DESARROLLO (4 STAGES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  STAGE 1: NOTION → GitHub Issue
+  ├─ Script: auto_expand_ready_ferreteria.js
+  ├─ Trigger: Cron o manual
+  └─ Resultado: Issue + label "from-notion"
+
+  STAGE 2: PLAN (Análisis READ-ONLY)
+  ├─ Trigger: Label "from-notion"
+  ├─ Modelo: opencode/trinity-large-preview-free (default)
+  ├─ Output: Plan comentado en GitHub
+  ├─ Contexto: Feedback histórico
+  └─ Label resultado: "awaiting-human-intervention"
+
+  STAGE 2B: FEEDBACK LOOP (Iterativo)
+  ├─ Trigger: Nuevo comentario (no bot)
+  ├─ Acción: Re-analiza con feedback
+  └─ Vuelve a STAGE 2
+
+  STAGE 3: BUILD (Implementación WRITE)
+  ├─ Trigger: Label "ready-for-development"
+  ├─ Modelo: github-copilot/claude-haiku-4.5 (default)
+  ├─ Worktree: ~/openclaw-workspace/worktrees/issue-X
+  ├─ Cambios: Git aislado
+  └─ Resultado: PR creado + label "pr-generated"
+
+  STAGE 4: MERGE → COMPLETION
+  ├─ Trigger: PR merged
+  ├─ Acción: Actualiza Notion (Estado = "Completada")
+  └─ FIN: Tarea completada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🤖 MODELOS IA Y FALLBACKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PLAN MODE:
+  ├─ Primary: opencode/trinity-large-preview-free
+  ├─ Fallback 1: opencode/minimax-m2.5-free
+  ├─ Fallback 2: opencode/big-pickle
+  └─ Límite: Si todos fallan → FAIL
+
+  BUILD MODE:
+  ├─ Primary: github-copilot/claude-haiku-4.5
+  ├─ Fallback 1: opencode/trinity-large-preview-free
+  ├─ Fallback 2: opencode/minimax-m2.5-free
+  └─ Límite: Si todos fallan → FAIL
+
+  TRIGGERS DE FALLBACK:
+  ├─ "model not found"
+  ├─ "providermodelnotfounderror"
+  ├─ "request too large"
+  ├─ "tpm" (Token Per Minute)
+  └─ "provider not found"
+
+  CONSTRAINT ESPECIAL:
+  ├─ PLAN mode es READ-ONLY
+  ├─ Detecta intentos de write
+  ├─ Si se detectan: Fuerza fallback
+  └─ Patrones: ← Edit, file diffs, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 SECRETOS Y ENV VARS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  REQUERIDAS:
+  ├─ GITHUB_TOKEN (acceso repos)
+  ├─ NOTION_TOKEN (acceso DB)
+  └─ NOTION_DATABASE_ID (DB ferreteria)
+
+  OPCIONALES IMPORTANTES:
+  ├─ BUILD_MODEL (override modelo BUILD)
+  ├─ PLANNER_MODEL (override modelo PLAN)
+  ├─ BOT_GITHUB_LOGIN (ignorar comentarios bot)
+  ├─ TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (notificaciones)
+  └─ VPS_URL, OPENCLAW_EXPAND_URL (configuración interna)
+
+  ⚠️ PROBLEMAS DE SEGURIDAD:
+  ├─ Secretos en .env (versionable)
+  ├─ GITHUB_TOKEN expuesto
+  ├─ NOTION_TOKEN expuesto
+  ├─ Si repo público: compromiso total
+  └─ SOLUCIÓN: Usar Vault o environment vars
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 COLA DE PROCESAMIENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  CONFIGURACIÓN:
+  ├─ Max Workers: 3 (hardcoded)
+  ├─ Orden: FIFO (First-In-First-Out)
+  ├─ Por Issue: 1 worker (secuencial)
+  ├─ Entre Issues: Paralelo (hasta 3)
+  └─ Label Cooldown: 2500ms (anti-spam)
+
+  CARACTERÍSTICAS:
+  ├─ PLAN y BUILD: secuencial por issue
+  ├─ Diferentes issues: paralelo
+  ├─ Prevención de duplicados
+  └─ Persistencia: EN MEMORIA (⚠️ se pierde on restart)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 INTEGRACIONES EXTERNAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  GitHub API:
+  ├─ Rate limit: 5000 req/hora (authenticated)
+  ├─ Retry: 4 intentos con exponential backoff
+  ├─ Endpoints: issues, PRs, comments, webhooks
+  └─ Error handling: withRetry() + clasificación
+
+  Notion API:
+  ├─ Database query (búsqueda tareas)
+  ├─ Pages retrieve/update (estado)
+  ├─ Sin rate limiting visible
+  └─ Mapeo: notion_page_id en issue body
+
+  OpenCode (CLI):
+  ├─ Invocación: spawn("opencode run ...")
+  ├─ Comunicación: stdin/stdout/stderr
+  ├─ Session: Persistida en ~/.opencode/sessions/
+  └─ Modelos: Configurable via --model
+
+  Telegram:
+  ├─ Notificaciones de error
+  ├─ Resumen de cambios
+  ├─ Búsqueda: env vars + config JSON
+  └─ HTTPS POST: api.telegram.org/bot{token}/sendMessage
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ LIMITACIONES CRÍTICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  🔴 ARQUITECTURA:
+  ├─ Single-project: hardcoded a v0-ferreteria
+  ├─ Single instance: Todo en 1 Node process
+  ├─ Sin escalabilidad horizontal
+  └─ Esfuerzo multi-project: ~450 LOC (bajo riesgo)
+
+  🔴 PERSISTENCIA:
+  ├─ Queue en memoria (se pierde on restart)
+  ├─ Session storage en JSON (sin backup)
+  ├─ No hay rollback de cambios
+  └─ Sin snapshots de estado
+
+  🔴 SEGURIDAD:
+  ├─ Secretos en .env versionable
+  ├─ Sin validación de webhook (opcional)
+  ├─ Sin rate limiting en webhook
+  └─ CRÍTICO: Token leak si repo es público
+
+  🔴 OBSERVABILIDAD:
+  ├─ Sin dashboard
+  ├─ Sin métricas
+  ├─ Logs no estructurados (mix con emojis)
+  ├─ Sin structured logging
+  └─ Logs crecen indefinidamente (1.8M sin rotación)
+
+  🔴 TESTING:
+  ├─ Cero unit tests
+  ├─ Sin integration tests
+  ├─ Sin coverage
+  └─ Regresiones frecuentes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 PUNTUACIÓN DEL SISTEMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Funcionalidad:        8/10  (Flujo completo, pero single-project)
+  Confiabilidad:        6/10  (Fallbacks, pero sin circuit breaker)
+  Seguridad:            3/10  (Secretos expuestos, sin validación)
+  Escalabilidad:        2/10  (Single instance, queue en memoria)
+  Observabilidad:       4/10  (Logs básicos, sin dashboard)
+  Maintainability:      5/10  (Código claro, sin tests)
+  
+  ═══════════════════════════════════════════════════════════════
+  PROMEDIO:             4.7/10 ⚠️ REFACTORING RECOMENDADO
+  ═══════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 PRÓXIMOS PASOS RECOMENDADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  SEMANA 1 (Inmediato):
+  ├─ [ ] Mover secretos a Vault / AWS Secrets Manager
+  ├─ [ ] Implementar rate limiting en webhook (express-rate-limit)
+  ├─ [ ] Agregar validación obligatoria de firma webhook
+  └─ Riesgo: BAJO | Impacto: ALTO (seguridad)
+
+  SEMANA 2-3 (Corto plazo):
+  ├─ [ ] Unit tests para /services (jest)
+  ├─ [ ] Dashboard básico (Express + Socket.io)
+  ├─ [ ] Log rotation (winston o logrotate)
+  └─ Riesgo: BAJO | Impacto: MEDIO (observabilidad)
+
+  MES 1 (Mediano plazo):
+  ├─ [ ] Migración a multi-project
+  ├─ [ ] Redis cache para GitHub
+  ├─ [ ] Structured logging (Pino/Winston JSON)
+  └─ Riesgo: MEDIO | Impacto: ALTO (escalabilidad)
+
+  MES 2+ (Largo plazo):
+  ├─ [ ] Separar en microservicios
+  ├─ [ ] Persistencia (MongoDB/PostgreSQL)
+  ├─ [ ] Kubernetes
+  ├─ [ ] Full observability (Prometheus + Grafana)
+  └─ Riesgo: ALTO | Impacto: MUY ALTO (architecture)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTACIÓN DISPONIBLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /root/.openclaw/ANALISIS_EXHAUSTIVO_COMPLETO.md
+  └─ 1000+ líneas
+  └─ Cubierta: Arquitectura, flujos, modelos, integración, limitaciones
+  └─ Listo para: Desarrollo, refactoring, migraciones
+
+  Secciones:
+  1. Estructura de Directorios (detallado)
+  2. Flujo Notion → GitHub → Desarrollo (con diagramas)
+  3. Modelos IA (con fallbacks)
+  4. Variables de Entorno (todos los params)
+  5. Ejecución del Bot (PM2 + persistencia)
+  6. Notificaciones y Logs (todo comunicación)
+  7. Dependencias NPM (análisis)
+  8. Puntos de Integración Externos (endpoints)
+  9. Limitaciones Actuales (críticas)
+  10. Refactoring Multiproyecto (estimaciones)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ANÁLISIS COMPLETADO
+
+Fecha: 4 de Marzo de 2026
+Estado: COMPLETO Y LISTO PARA USAR
+Complejidad: MEDIA
+Refactoring Recomendado: SÍ (especialmente multi-project + seguridad)
+
