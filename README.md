@@ -21,7 +21,7 @@ OpenClaw es un bot que automatiza un flujo de trabajo Notion -> GitHub -> PR, co
 
 ## Componentes
 
-- `webhook-server.js`: entrypoint, webhooks GitHub, cola FIFO, API de secretos.
+- `src/server.js`: entrypoint, webhooks GitHub, cola FIFO, API admin.
 - `main.js`: runPlanFlow y runBuildFlow.
 - `services/aiService.js`: integra OpenCode, modelos y fallbacks.
 - `services/taskQueue.js`: persistencia y rehidratacion en Supabase.
@@ -56,7 +56,7 @@ pm2 reload ecosystem.config.js
 - `config/projects.js`
 - `config/projects.example.env`
 - `db/schema.sql`
-- `webhook-server.js`
+- `src/server.js`
 - `main.js`
 
 ## Documentacion extendida

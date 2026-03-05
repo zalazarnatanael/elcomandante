@@ -56,7 +56,7 @@ Se ha realizado un análisis exhaustivo de la arquitectura OpenClaw. Los documen
 ### "¿Cuáles son los 5 archivos principales?"
 
 ```
-1. webhook-server.js (535 líneas)
+1. src/server.js (webhook + API)
    └─ Recibe webhooks GitHub, maneja colas, ejecuta tasks
 
 2. main.js (332 líneas)
@@ -94,7 +94,7 @@ handlePrClosed() → Notion actualizada
 
 ### "¿Cuántos workers corren en paralelo?"
 
-**3 workers máximo** (hardcoded en línea 26 webhook-server.js)
+**3 workers máximo** (configurable por env WORKER_CONCURRENCY)
 
 Pero con restricciones:
 - 1 issue = 1 worker (PLAN y BUILD secuenciales)
@@ -167,7 +167,7 @@ completed            → Issue resuelto
 ```
 /root/.openclaw/
 │
-├── webhook-server.js              ⭐ MAIN: Webhooks + Queue
+├── src/server.js                  ⭐ MAIN: Webhooks + Queue + Admin API
 ├── main.js                         ⭐ MAIN: Flows (PLAN + BUILD)
 │
 ├── services/

@@ -2,12 +2,12 @@
  * NotionCredentialsManager
  * Gestiona credenciales de Notion workspaces con soporte N:M (proyecto → múltiples workspaces)
  * - Carga desde tabla notion_workspaces (cifradas en BD)
- * - Descifra con MASTER_KEY
+ * - Descifra con ENCRYPTION_MASTER_KEY (fallback MASTER_KEY)
  * - Cachea en Redis (TTL 1h)
  */
 
-const { getSupabaseClient } = require('./database');
-const { encryptData, decryptData } = require('./encryptionService');
+const sql = require('../src/shared/config/db');
+const { encrypt, decrypt } = require('./encryptionService');
 const redis = require('redis');
 const logger = require('../logger');
 
@@ -43,44 +43,38 @@ class NotionCredentialsManager {
    */
   async getWorkspacesForProject(projectId) {
     try {
-      const supabase = getSupabaseClient();
-      
-      const { data, error } = await supabase
-        .from('project_notion_workspaces')
-        .select(`
-          notion_workspace_id,
-          database_id,
-          is_primary,
-          notion_workspaces (
-            workspace_id,
-            workspace_name,
-            api_key_encrypted,
-            is_active
-          )
-        `)
-        .eq('project_id', projectId)
-        .eq('notion_workspaces.is_active', true);
+      const rows = await sql`
+        SELECT
+          pnw.notion_workspace_id,
+          pnw.database_id,
+          pnw.is_primary,
+          nw.workspace_id,
+          nw.workspace_name,
+          nw.api_key_encrypted,
+          nw.is_active
+        FROM project_notion_workspaces pnw
+        JOIN notion_workspaces nw ON pnw.notion_workspace_id = nw.workspace_id
+        WHERE pnw.project_id = ${projectId}
+          AND nw.is_active = true
+      `;
 
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
+      if (!rows || rows.length === 0) {
         logger.warn(`No Notion workspaces found for project ${projectId}`);
         return [];
       }
 
       // Descifrar API keys
       const workspaces = await Promise.all(
-        data.map(async (row) => {
-          const workspace = row.notion_workspaces;
-          const apiKey = await this._decryptApiKey(workspace.api_key_encrypted);
+        rows.map(async (row) => {
+          const apiKey = await this._decryptApiKey(row.api_key_encrypted);
           
           return {
-            workspace_id: workspace.workspace_id,
-            workspace_name: workspace.workspace_name,
+            workspace_id: row.workspace_id,
+            workspace_name: row.workspace_name,
             api_key: apiKey,
             database_id: row.database_id,
             is_primary: row.is_primary,
-            is_active: workspace.is_active
+            is_active: row.is_active
           };
         })
       );
@@ -122,21 +116,21 @@ class NotionCredentialsManager {
       if (cached) return cached;
 
       // Cargar de BD
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from('notion_workspaces')
-        .select('api_key_encrypted')
-        .eq('workspace_id', workspaceId)
-        .eq('is_active', true)
-        .single();
+      const rows = await sql`
+        SELECT api_key_encrypted
+        FROM notion_workspaces
+        WHERE workspace_id = ${workspaceId}
+          AND is_active = true
+        LIMIT 1
+      `;
 
-      if (error) {
-        logger.error(`Workspace ${workspaceId} not found:`, error);
+      if (!rows || rows.length === 0) {
+        logger.error(`Workspace ${workspaceId} not found`);
         throw new Error(`Notion workspace ${workspaceId} not found`);
       }
 
       // Descifrar
-      const apiKey = await this._decryptApiKey(data.api_key_encrypted);
+      const apiKey = await this._decryptApiKey(rows[0].api_key_encrypted);
       
       // Guardar en cache
       await this._setInCache(workspaceId, apiKey);
@@ -153,17 +147,14 @@ class NotionCredentialsManager {
    */
   async getAllWorkspaces() {
     try {
-      const supabase = getSupabaseClient();
-      
-      const { data, error } = await supabase
-        .from('notion_workspaces')
-        .select('*')
-        .eq('is_active', true)
-        .order('workspace_name', { ascending: true });
+      const rows = await sql`
+        SELECT *
+        FROM notion_workspaces
+        WHERE is_active = true
+        ORDER BY workspace_name ASC
+      `;
 
-      if (error) throw error;
-
-      return data || [];
+      return rows || [];
     } catch (error) {
       logger.error('Error listing workspaces:', error);
       throw error;
@@ -176,30 +167,21 @@ class NotionCredentialsManager {
    */
   async addWorkspace(workspaceId, workspaceName, apiKey, notes = null) {
     try {
-      const supabase = getSupabaseClient();
-      
       if (!process.env.MASTER_KEY) {
         throw new Error('MASTER_KEY not set in environment');
       }
 
       // Encriptar API key
-      const encryptedKey = await encryptData(apiKey);
+      const encryptedKey = await encrypt(apiKey);
 
-      const { data, error } = await supabase
-        .from('notion_workspaces')
-        .insert({
-          workspace_id: workspaceId,
-          workspace_name: workspaceName,
-          api_key_encrypted: encryptedKey,
-          notes: notes,
-          created_by: process.env.USER || 'system'
-        })
-        .select();
-
-      if (error) throw error;
+      const rows = await sql`
+        INSERT INTO notion_workspaces (workspace_id, workspace_name, api_key_encrypted, notes, created_by)
+        VALUES (${workspaceId}, ${workspaceName}, ${encryptedKey}, ${notes}, ${process.env.USER || 'system'})
+        RETURNING *
+      `;
 
       logger.info(`Notion workspace ${workspaceId} added successfully`);
-      return data[0];
+      return rows[0];
     } catch (error) {
       logger.error(`Error adding workspace ${workspaceId}:`, error);
       throw error;
@@ -211,28 +193,23 @@ class NotionCredentialsManager {
    */
   async linkProjectToWorkspace(projectId, workspaceId, databaseId = null, isPrimary = false) {
     try {
-      const supabase = getSupabaseClient();
-
-      const { data, error } = await supabase
-        .from('project_notion_workspaces')
-        .upsert({
-          project_id: projectId,
-          notion_workspace_id: workspaceId,
-          database_id: databaseId,
-          is_primary: isPrimary
-        }, {
-          onConflict: 'project_id,notion_workspace_id'
-        })
-        .select();
-
-      if (error) throw error;
+      const rows = await sql`
+        INSERT INTO project_notion_workspaces (project_id, notion_workspace_id, database_id, is_primary)
+        VALUES (${projectId}, ${workspaceId}, ${databaseId}, ${isPrimary})
+        ON CONFLICT (project_id, notion_workspace_id)
+        DO UPDATE SET
+          database_id = EXCLUDED.database_id,
+          is_primary = EXCLUDED.is_primary,
+          updated_at = ${new Date().toISOString()}
+        RETURNING *
+      `;
 
       logger.info(`Project ${projectId} linked to workspace ${workspaceId}`);
       
       // Limpiar cache del proyecto
       await this._clearProjectCache(projectId);
       
-      return data[0];
+      return rows[0];
     } catch (error) {
       logger.error(`Error linking project ${projectId} to workspace ${workspaceId}:`, error);
       throw error;
@@ -244,15 +221,11 @@ class NotionCredentialsManager {
    */
   async unlinkProjectFromWorkspace(projectId, workspaceId) {
     try {
-      const supabase = getSupabaseClient();
-
-      const { error } = await supabase
-        .from('project_notion_workspaces')
-        .delete()
-        .eq('project_id', projectId)
-        .eq('notion_workspace_id', workspaceId);
-
-      if (error) throw error;
+      await sql`
+        DELETE FROM project_notion_workspaces
+        WHERE project_id = ${projectId}
+          AND notion_workspace_id = ${workspaceId}
+      `;
 
       logger.info(`Project ${projectId} unlinked from workspace ${workspaceId}`);
       
@@ -296,7 +269,7 @@ class NotionCredentialsManager {
     if (!process.env.MASTER_KEY) {
       throw new Error('MASTER_KEY not set in environment');
     }
-    return decryptData(encryptedKey);
+    return decrypt(encryptedKey);
   }
 
   /**

@@ -1,11 +1,13 @@
 const { Octokit } = require("@octokit/rest");
 const simpleGit = require("simple-git");
+const fs = require("fs");
 const { REPO_PATH, REPO_OWNER, REPO_NAME, LABELS } = require("./config/constants");
 const { projects } = require("./config/projects");
 const { classifyComplexity } = require("./services/complexityService");
 const { insertPlanHistory, getProjectSecrets, isDbConfigured } = require("./services/database");
 const { decrypt } = require("./services/encryptionService");
 const { runOpenCode } = require("./services/aiService");
+const developerCredentialsManager = require("./services/developerCredentialsManager");
 const { withRetry, classifyGithubError } = require("./services/githubRetry");
 const { sendTelegramMessage } = require("./services/telegramNotify");
 const { ensureWorktree } = require("./services/worktreeManager");
@@ -73,13 +75,94 @@ async function gitPushWithRetry(gitClient, remote, branch, options = {}) {
 }
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-const git = simpleGit(REPO_PATH);
+let gitClient = null;
+
+function getGitClient() {
+    if (gitClient) return gitClient;
+    if (!REPO_PATH || !fs.existsSync(REPO_PATH)) {
+        console.log(`⚠️ [GIT] REPO_PATH no existe: ${REPO_PATH}`);
+        return null;
+    }
+    gitClient = simpleGit(REPO_PATH);
+    return gitClient;
+}
 
 function resolveProjectConfig(input) {
     if (!input) return projects[process.env.DEFAULT_PROJECT_ID || "proyecto-1"] || projects["proyecto-1"];
     if (typeof input === "string") return projects[input];
     if (input.projectId && projects[input.projectId]) return projects[input.projectId];
     return input;
+}
+
+async function resolveAssigneeForIssue(issue, projectConfig, octokitClient) {
+    const owner = projectConfig.github?.owner || REPO_OWNER;
+    const repo = projectConfig.github?.repo || REPO_NAME;
+    const issueNumber = issue.number;
+
+    let assignees = issue.assignees || [];
+    if (!assignees.length) {
+        try {
+            const { data } = await withRetry(() => octokitClient.rest.issues.get({
+                owner,
+                repo,
+                issue_number: issueNumber
+            }));
+            assignees = data.assignees || [];
+        } catch (error) {
+            console.log(`⚠️ [ASSIGNEE] No se pudo obtener assignee de #${issueNumber}: ${error.message}`);
+        }
+    }
+
+    if (!assignees.length) return null;
+
+    const assignee = assignees[0];
+    return assignee?.login || null;
+}
+
+async function notifyMissingAssignee(issue, projectConfig, octokitClient) {
+    const owner = projectConfig.github?.owner || REPO_OWNER;
+    const repo = projectConfig.github?.repo || REPO_NAME;
+    const issueNumber = issue.number;
+    const message = "⚠️ No puedo continuar: el issue no tiene assignee. Asigná un developer para continuar.";
+
+    try {
+        await withRetry(() => octokitClient.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: issueNumber,
+            body: message
+        }));
+    } catch (error) {
+        console.log(`⚠️ [ASSIGNEE] No se pudo comentar en #${issueNumber}: ${error.message}`);
+    }
+}
+
+async function configureGitAuthor(worktreeGit, credentials) {
+    const name = credentials.commit_name || credentials.github_username;
+    const email = credentials.commit_email || `${credentials.github_username}@users.noreply.github.com`;
+    await worktreeGit.addConfig('user.name', name, false, 'local');
+    await worktreeGit.addConfig('user.email', email, false, 'local');
+}
+
+function buildAuthenticatedRemoteUrl(owner, repo, token) {
+    return `https://x-access-token:${token}@github.com/${owner}/${repo}.git`;
+}
+
+async function setGitRemoteWithToken(worktreeGit, owner, repo, token) {
+    let previousUrl = null;
+    try {
+        previousUrl = (await worktreeGit.remote(['get-url', 'origin'])).trim();
+    } catch (error) {
+        previousUrl = null;
+    }
+    const authUrl = buildAuthenticatedRemoteUrl(owner, repo, token);
+    await worktreeGit.remote(['set-url', 'origin', authUrl]);
+    return previousUrl;
+}
+
+async function restoreGitRemote(worktreeGit, previousUrl) {
+    if (!previousUrl) return;
+    await worktreeGit.remote(['set-url', 'origin', previousUrl]);
 }
 
 async function recordPlanHistory(taskId, plan, complexity, attemptNumber) {
@@ -190,6 +273,7 @@ async function runPlanFlow(issue, projectInput) {
     const octokitClient = projectSecrets.GITHUB_TOKEN
         ? new Octokit({ auth: projectSecrets.GITHUB_TOKEN })
         : octokit;
+    await developerCredentialsManager.initRedis();
 
     try {
         try {
@@ -372,12 +456,15 @@ async function runBuildFlow(issue, projectInput) {
         await worktreeGit.checkout(branch).catch(() => {});
         const traceId = issue.traceId || "";
 
-        const baseDiff = await git.status();
-        if (baseDiff.files.length > 0) {
-            const baseFiles = baseDiff.files.map(f => f.path).slice(0, 10);
-            console.log(`⚠️ [BUILD] Cambios detectados en repo base (${baseDiff.files.length}). Se ignoran para evitar mezclas.`);
-            if (baseFiles.length > 0) {
-                console.log(`⚠️ [BUILD] Archivos en repo base: ${baseFiles.join(", ")}`);
+        const baseGit = getGitClient();
+        if (baseGit) {
+            const baseDiff = await baseGit.status();
+            if (baseDiff.files.length > 0) {
+                const baseFiles = baseDiff.files.map(f => f.path).slice(0, 10);
+                console.log(`⚠️ [BUILD] Cambios detectados en repo base (${baseDiff.files.length}). Se ignoran para evitar mezclas.`);
+                if (baseFiles.length > 0) {
+                    console.log(`⚠️ [BUILD] Archivos en repo base: ${baseFiles.join(", ")}`);
+                }
             }
         }
 
@@ -408,21 +495,52 @@ async function runBuildFlow(issue, projectInput) {
             buildModelOverride: buildModel
         });
 
+        const assigneeUsername = await resolveAssigneeForIssue(issue, projectConfig, octokitClient);
+        if (!assigneeUsername) {
+            await notifyMissingAssignee(issue, projectConfig, octokitClient);
+            return;
+        }
+
+        const developerCredentials = await developerCredentialsManager.getCredentialsByGithubUsername(assigneeUsername);
+        if (!developerCredentials) {
+            const message = `⚠️ No puedo continuar: no hay credenciales para @${assigneeUsername}.`;
+            try {
+                await withRetry(() => octokitClient.rest.issues.createComment({
+                    owner: projectConfig.github?.owner || REPO_OWNER,
+                    repo: projectConfig.github?.repo || REPO_NAME,
+                    issue_number: issue.number,
+                    body: message
+                }));
+            } catch (error) {
+                console.log(`⚠️ [ASSIGNEE] No se pudo comentar en #${issue.number}: ${error.message}`);
+            }
+            return;
+        }
+
+        await configureGitAuthor(worktreeGit, developerCredentials);
+        const assigneeOctokit = new Octokit({ auth: developerCredentials.token });
+
         const status = await worktreeGit.status();
         if (status.files.length > 0) {
             await worktreeGit.add("./*").commit(`feat: fix #${issue.number}`);
+            let previousRemote = null;
             try {
+                const owner = projectConfig.github?.owner || REPO_OWNER;
+                const repo = projectConfig.github?.repo || REPO_NAME;
+                previousRemote = await setGitRemoteWithToken(worktreeGit, owner, repo, developerCredentials.token);
                 console.log(`🚀 [GIT] Push branch ${branch}`);
                 await gitPushWithRetry(worktreeGit, "origin", branch, { maxAttempts: 3, baseDelayMs: 1000 });
             } catch (pushErr) {
                 console.error(`❌ Error push en #${issue.number}:`, pushErr.message);
                 await notifyFailure(issue.number, 'BUILD', pushErr);
                 return;
+            } finally {
+                await restoreGitRemote(worktreeGit, previousRemote);
             }
             try {
                 console.log(`🧾 [PR] Creando PR para ${branch}`);
                 const prBody = buildPrBody(issue, plan);
-                const { data: pr } = await withRetry(() => octokitClient.rest.pulls.create({
+                const { data: pr } = await withRetry(() => assigneeOctokit.rest.pulls.create({
                     owner: projectConfig.github?.owner || REPO_OWNER,
                     repo: projectConfig.github?.repo || REPO_NAME,
                     title: `PR: ${issue.title}`,
@@ -433,7 +551,7 @@ async function runBuildFlow(issue, projectInput) {
                 console.log(`✅ PR creado: ${pr.html_url}`);
             } catch (e) {
                 try {
-                    const { data: existingPrs } = await withRetry(() => octokitClient.rest.pulls.list({
+                    const { data: existingPrs } = await withRetry(() => assigneeOctokit.rest.pulls.list({
                         owner: projectConfig.github?.owner || REPO_OWNER,
                         repo: projectConfig.github?.repo || REPO_NAME,
                         head: `${projectConfig.github?.owner || REPO_OWNER}:${branch}`,
@@ -445,7 +563,7 @@ async function runBuildFlow(issue, projectInput) {
                         if (!body.includes(`Resolves #${issue.number}`) || !body.includes("## Summary")) {
                             const prBody = buildPrBody(issue, plan);
                             const mergedBody = body ? `${prBody}\n\n---\n\n${body}` : prBody;
-                            await withRetry(() => octokitClient.rest.pulls.update({
+                            await withRetry(() => assigneeOctokit.rest.pulls.update({
                                 owner: projectConfig.github?.owner || REPO_OWNER,
                                 repo: projectConfig.github?.repo || REPO_NAME,
                                 pull_number: existing.number,

@@ -1,24 +1,17 @@
-const { createClient } = require("@supabase/supabase-js");
-
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const sql = require('../src/shared/config/db');
 
 function isDbConfigured() {
-  return Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
+  return Boolean(process.env.DATABASE_URL);
 }
-
-const supabase = isDbConfigured()
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-  : null;
 
 async function getProjectSecrets(projectId) {
   if (!isDbConfigured()) return [];
-  const { data, error } = await supabase
-    .from("project_secrets")
-    .select("key_name, encrypted_value")
-    .eq("project_id", projectId);
-  if (error) throw error;
-  return data || [];
+  const rows = await sql`
+    SELECT key_name, encrypted_value
+    FROM project_secrets
+    WHERE project_id = ${projectId}
+  `;
+  return rows || [];
 }
 
 async function upsertProjectSecrets(projectId, secrets) {
@@ -30,28 +23,23 @@ async function upsertProjectSecrets(projectId, secrets) {
     updated_at: new Date().toISOString()
   }));
   if (rows.length === 0) return 0;
-  const { error } = await supabase
-    .from("project_secrets")
-    .upsert(rows, { onConflict: "project_id,key_name" });
-  if (error) throw error;
+  await sql`
+    INSERT INTO project_secrets ${sql(rows)}
+    ON CONFLICT (project_id, key_name)
+    DO UPDATE SET encrypted_value = EXCLUDED.encrypted_value, updated_at = EXCLUDED.updated_at
+  `;
   return rows.length;
 }
 
 async function insertPlanHistory(taskId, plan, complexity, attemptNumber) {
   if (!isDbConfigured()) return;
-  const { error } = await supabase
-    .from("plan_history")
-    .insert({
-      task_id: taskId,
-      plan_text: plan,
-      complexity,
-      attempt_number: attemptNumber
-    });
-  if (error) throw error;
+  await sql`
+    INSERT INTO plan_history (task_id, plan_text, complexity, attempt_number)
+    VALUES (${taskId}, ${plan}, ${complexity}, ${attemptNumber})
+  `;
 }
 
 module.exports = {
-  supabase,
   isDbConfigured,
   getProjectSecrets,
   upsertProjectSecrets,

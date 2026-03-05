@@ -68,6 +68,28 @@ CREATE TABLE IF NOT EXISTS plan_history (
 );
 
 -- ============================================================================
+-- DEVELOPER CREDENTIALS: Per-assignee GitHub tokens for commits/PRs
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS developer_credentials (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  github_username VARCHAR(255) UNIQUE NOT NULL,
+  api_token_encrypted TEXT NOT NULL,
+  commit_name VARCHAR(255),
+  commit_email VARCHAR(255),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  created_by VARCHAR(255),
+  notes TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_developer_github_username
+  ON developer_credentials(github_username);
+CREATE INDEX IF NOT EXISTS idx_developer_active
+  ON developer_credentials(is_active);
+
+-- ============================================================================
 -- NOTION WORKSPACES: Multi-workspace support (N:M relationships)
 -- ============================================================================
 

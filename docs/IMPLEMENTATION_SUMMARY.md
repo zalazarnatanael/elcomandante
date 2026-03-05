@@ -354,11 +354,13 @@ node scripts/manage-notion-workspace.js validate --workspace-id ws-1
 
 📁 services/
   ├── notionCredentialsManager.js   [NEW] Manager de credenciales
+  ├── developerCredentialsManager.js [NEW] Credenciales por developer
   ├── database.js                   [?]  (sin cambios)
   └── ...
 
 📁 scripts/
   ├── manage-notion-workspace.js    [NEW] CLI de gestión
+  ├── manage-developers.js           [NEW] CLI para tokens de developers
   ├── auto_expand_multi_projects.js [MOD] Integración dinámica
   └── create_github_issues_from_expanded.js [DEPRECATED] (legacy)
 
@@ -372,6 +374,15 @@ node scripts/manage-notion-workspace.js validate --workspace-id ws-1
   ├── logger.js                     [NEW] Logger simple
   ├── .env.example                  [MOD] Actualizado
   └── README.md                     [?]  (considerar actualizar)
+
+## Assignee Execution (GitHub)
+
+Los commits, push y PR ahora se realizan con el token del developer asignado en el issue:
+
+- Si no hay assignee, el bot **bloquea** la ejecución y comenta en el issue.
+- Si el assignee no tiene credenciales cargadas, también bloquea.
+- Los commits usan `username@users.noreply.github.com` para no exponer email real.
+- El push se hace usando un remote temporal autenticado con el token del assignee.
 ```
 
 ## Next Steps
@@ -382,6 +393,50 @@ node scripts/manage-notion-workspace.js validate --workspace-id ws-1
 4. ⏳ Remover NOTION_API_KEY de .env en producción
 5. ⏳ Monitorear logs por primer mes
 6. ⏳ Considerar UI de gestión si se vuelve tedioso
+
+## Supabase Auth (Frontend)
+
+- Todas las rutas no-webhook requieren `Authorization: Bearer <supabase_jwt>`
+- `/webhook/*` y `/uploads/*` quedan públicas
+- `/api/projects/:projectId/secrets` requiere rol `admin`
+- La validacion de JWT usa `SUPABASE_JWT_SECRET`
+
+## Swagger
+
+- Documentacion disponible en `GET /docs`
+
+## Database Connection
+
+- El acceso a datos usa `postgres` con `DATABASE_URL`
+
+## API Admin/Dashboard
+
+Se agrego una nueva API con estructura por features en `src/`:
+
+- `GET /api/admin/summary`
+- `GET /api/projects`
+- `POST /api/projects`
+- `PUT /api/projects/:id`
+- `DELETE /api/projects/:id`
+- `GET /api/workspaces`
+- `POST /api/workspaces`
+- `PUT /api/workspaces/:id`
+- `DELETE /api/workspaces/:id`
+- `GET /api/project-workspaces?projectId=...`
+- `POST /api/project-workspaces`
+- `DELETE /api/project-workspaces/:id`
+- `GET /api/developers`
+- `POST /api/developers`
+- `PUT /api/developers/:username`
+- `DELETE /api/developers/:username`
+- `GET /api/tasks`
+- `GET /api/tasks/:id`
+- `POST /api/tasks/retry/:id`
+
+## Server Entry
+
+- Nuevo entrypoint: `src/server.js`
+- `webhook-server.js` fue reemplazado
 
 ---
 

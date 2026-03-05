@@ -20,6 +20,25 @@
 -- ============================================================================
 -- These are example entries. In production, use the management script above.
 
+-- ============================================================================
+-- STEP 0: Create mock projects (required for foreign keys)
+-- ============================================================================
+-- These are minimal entries to satisfy project_notion_workspaces FK constraints.
+
+INSERT INTO projects (
+  id,
+  name,
+  github_owner,
+  github_repo,
+  notion_database_id,
+  is_active
+) VALUES
+  ('proyecto-1', 'Ferreteria', 'acme', 'ferreteria', 'db-ferreteria-1', true),
+  ('proyecto-2', 'Ecommerce', 'acme', 'ecommerce', 'db-ecommerce-1', true),
+  ('proyecto-3', 'Marketplace', 'acme', 'marketplace', 'db-marketplace-1', true),
+  ('proyecto-4', 'Proyecto 4', 'acme', 'proyecto-4', 'db-proyecto4-1', true)
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO notion_workspaces (
   workspace_id,
   workspace_name,
@@ -109,3 +128,26 @@ ORDER BY pnw.is_primary DESC;
 
 -- Remove a workspace entirely (cascades to project links)
 -- DELETE FROM notion_workspaces WHERE workspace_id = 'ws-1';
+
+-- ============================================================================
+-- DEVELOPER CREDENTIALS - EXAMPLE SEEDING
+-- ============================================================================
+-- IMPORTANT: Use the management script to add/update credentials:
+--
+--   node scripts/manage-developers.js add \
+--     --github-username username \
+--     --token "ghp_xxxxx"
+--
+-- ============================================================================
+
+INSERT INTO developer_credentials (
+  github_username,
+  api_token_encrypted,
+  commit_name,
+  commit_email,
+  is_active,
+  notes
+) VALUES
+  ('dev-1', '[ENCRYPTED_TOKEN_1]', 'Dev One', 'dev-1@users.noreply.github.com', true, 'Primary developer'),
+  ('dev-2', '[ENCRYPTED_TOKEN_2]', 'Dev Two', 'dev-2@users.noreply.github.com', true, 'Backup developer')
+ON CONFLICT (github_username) DO NOTHING;

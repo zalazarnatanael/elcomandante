@@ -14,7 +14,7 @@ Automatizar el ciclo Notion -> GitHub -> PR -> Merge, con un bot que:
 ## 2. Flujo end-to-end (resumen)
 
 1. Cliente mueve card en Notion de "TAREAS" a "READY".
-2. Cron (`webhook-server.js` o `scripts/auto_expand_multi_projects.js`) detecta.
+2. Cron (`src/server.js` o `scripts/auto_expand_multi_projects.js`) detecta.
 3. Se crea Issue en GitHub con label `from-notion`.
 4. Bot analiza, genera plan y agrega label `awaiting-human-intervention`.
 5. Humano comenta ajustes; el bot replanifica (loop).
@@ -73,7 +73,7 @@ Notion status (ejemplo):
 
 ### 4.1 Entrypoints
 
-- `webhook-server.js`: recibe webhooks GitHub, encola tasks y expone API de secretos.
+- `src/server.js`: recibe webhooks GitHub, encola tasks y expone API admin.
 - `scripts/auto_expand_multi_projects.js`: cron para Notion -> GitHub.
 
 ### 4.2 Persistencia y cola

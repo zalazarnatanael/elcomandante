@@ -2,8 +2,8 @@ module.exports = {
   apps : [
     {
       name: "openclaw-webhook",
-      script: "./webhook-server.js",
-      watch: ["webhook-server.js", "services", "config"],
+      script: "./src/server.js",
+      watch: ["src", "services", "config"],
       ignore_watch: ["node_modules", "session_logs", "logs"],
       error_file: "./logs/webhook-err.log",
       out_file: "./logs/webhook-out.log",

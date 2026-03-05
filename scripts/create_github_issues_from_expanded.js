@@ -1,9 +1,6 @@
 const { Client } = require("@notionhq/client");
 require("dotenv").config();
 
-const notionCredentialsManager = require("../services/notionCredentialsManager");
-const logger = require("../logger");
-
 const OWNER = process.env.GITHUB_OWNER;
 const REPO = process.env.GITHUB_REPO;
 const GH_TOKEN = process.env.GITHUB_TOKEN;
@@ -46,12 +43,12 @@ function mapLabelsFromEtiquetas(tags) {
   return [...new Set(labels)];
 }
 
-async function getAllCommentsText(blockId) {
+async function getAllCommentsText(notionClient, blockId) {
   let cursor = undefined;
   const parts = [];
 
   while (true) {
-    const res = await notion.comments.list({
+    const res = await notionClient.comments.list({
       block_id: blockId,
       start_cursor: cursor,
       page_size: 100,
@@ -127,13 +124,13 @@ async function updateIssueLabels(issueNumber, labels) {
   return await r.json();
 }
 
-async function updateNotionAfterIssue(pageId, issueUrl) {
+async function updateNotionAfterIssue(notionClient, pageId, issueUrl) {
   const props = {
     "GitHub Issue URL": { url: issueUrl },
     "Estado": { status: { name: "ready-to-code" } }
   };
 
-  await notion.pages.update({
+  await notionClient.pages.update({
     page_id: pageId,
     properties: props,
   });
@@ -150,6 +147,8 @@ async function main() {
       "Missing NOTION_DATABASE_ID_FERRETERIA or NOTION_DATABASE_ID env var."
     );
   }
+
+  const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
   const limit = Number(process.env.CREATE_ISSUES_LIMIT || 3);
 
@@ -199,7 +198,7 @@ async function main() {
     // 1) Comentarios (tu “expansión” actual)
     let commentsText = "";
     try {
-      commentsText = await getAllCommentsText(pageId);
+      commentsText = await getAllCommentsText(notion, pageId);
     } catch (e) {
       console.error("Could not read comments for page:", pageId, e.message);
     }
@@ -260,7 +259,7 @@ Devolvé Markdown con estas secciones:
       } catch (e) {
         console.error(`No se pudo agregar bot-working en #${issue.number}:`, e.message);
       }
-      await updateNotionAfterIssue(pageId, issue.html_url);
+      await updateNotionAfterIssue(notion, pageId, issue.html_url);
       console.log(`Created issue: ${issue.html_url}`);
     } catch (e) {
       console.error("Failed for page:", pageId, e.message);

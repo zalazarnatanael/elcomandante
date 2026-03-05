@@ -223,6 +223,10 @@ Si un workspace está marcado `is_active = false`:
 UPDATE notion_workspaces SET is_active = true WHERE workspace_id = 'ws-1';
 ```
 
+## Auth para endpoints
+
+Las rutas no-webhook requieren `Authorization: Bearer <supabase_jwt>`.
+
 ## Migración desde versión anterior
 
 Si anteriormente usabas `NOTION_API_KEY` hardcodeado:
@@ -262,6 +266,14 @@ Si anteriormente usabas `NOTION_API_KEY` hardcodeado:
 - Rotar `MASTER_KEY` anualmente
 - Monitorear accesos a Supabase
 
+## DB Connection
+
+Las operaciones de datos usan `DATABASE_URL` via `postgres`.
+
+## Auth JWT
+
+Las rutas protegidas validan el token con `SUPABASE_JWT_SECRET`.
+
 ## Referencias
 
 - **Notion API**: https://developers.notion.com
@@ -270,3 +282,34 @@ Si anteriormente usabas `NOTION_API_KEY` hardcodeado:
 - **Credentials Manager**: `services/notionCredentialsManager.js`
 - **Schema**: `db/schema.sql`
 - **Seed Example**: `db/seed-notion-workspaces.sql`
+
+---
+
+# Developer Credentials (GitHub Assignee)
+
+OpenClaw puede crear commits/PRs con la cuenta del developer asignado en el issue.
+
+## Configuracion
+
+1. Cada developer crea un Personal Access Token con permisos `repo`.
+2. Registrar el token (cifrado) en Supabase usando el script:
+
+```bash
+node scripts/manage-developers.js add \
+  --github-username dev1 \
+  --token "ghp_xxxxx" \
+  --name "Dev One"
+```
+
+## Reglas
+
+- Si el issue no tiene assignee, el bot **bloquea** el build.
+- Si el assignee no tiene credenciales, el bot **bloquea** el build.
+- Los commits usan email `username@users.noreply.github.com`.
+- El PR se crea usando el token del assignee.
+
+## Validar tokens
+
+```bash
+node scripts/manage-developers.js validate --github-username dev1
+```
