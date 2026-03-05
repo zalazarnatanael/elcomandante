@@ -9,6 +9,8 @@ require("dotenv").config();
 const { projects } = require("../config/projects");
 const { getProjectSecrets, isDbConfigured } = require("../services/database");
 const { decrypt } = require("../services/encryptionService");
+const notionCredentialsManager = require("../services/notionCredentialsManager");
+const logger = require("../logger");
 
 const UPLOADS_PATH = path.join(process.env.HOME, ".openclaw/public/uploads");
 
@@ -108,77 +110,106 @@ async function loadProjectSecrets(projectId) {
 
 async function expandReadyTasksForProject(projectId, projectConfig) {
   const secrets = await loadProjectSecrets(projectId);
-  const notion = new Client({ auth: secrets.NOTION_TOKEN });
-  const n2m = new NotionToMarkdown({ notionClient: notion });
+  
+  // Cargar workspaces de Notion del proyecto
+  const workspaces = await notionCredentialsManager.getWorkspacesForProject(projectId);
+  
+  if (!workspaces || workspaces.length === 0) {
+    logger.warn(`[${projectId}] No Notion workspaces linked, skipping`);
+    return;
+  }
+  
   const octokit = new Octokit({ auth: secrets.GITHUB_TOKEN });
-
-  const response = await notion.databases.query({
-    database_id: projectConfig.notion.databaseId,
-    filter: {
-      property: "Estado",
-      status: { equals: "READY" }
+  
+  // Procesar cada workspace del proyecto
+  for (const workspace of workspaces) {
+    logger.info(`[${projectId}] Processing workspace: ${workspace.workspace_id}`);
+    
+    const notion = new Client({ auth: workspace.api_key });
+    const n2m = new NotionToMarkdown({ notionClient: notion });
+    
+    // Si no hay database_id en el mapeo, saltarlo
+    if (!workspace.database_id) {
+      logger.warn(`[${projectId}] No database_id for workspace ${workspace.workspace_id}, skipping`);
+      continue;
     }
-  });
 
-  if (!response?.results?.length) return;
+    try {
+      const response = await notion.databases.query({
+        database_id: workspace.database_id,
+        filter: {
+          property: "Estado",
+          status: { equals: "READY" }
+        }
+      });
 
-  for (const page of response.results) {
-    const title = getTitle(page) || "Nueva tarea";
-    const description = getRichText(page, "Descripcion") || "";
-    const tags = getMultiSelect(page, "Tags") || "";
-    const comments = await getPageComments(notion, page.id);
-
-    const mdBlocks = await n2m.pageToMarkdown(page.id);
-    const mdString = n2m.toMarkdownString(mdBlocks);
-    const fullContent = await processMarkdownImages(mdString.parent || "");
-
-    const issueBody = [
-      `Notion-PageId: ${page.id}`,
-      tags ? `Tags: ${tags}` : null,
-      "",
-      description,
-      "",
-      fullContent,
-      "",
-      comments
-    ].filter(Boolean).join("\n");
-
-    const issue = await octokit.rest.issues.create({
-      owner: projectConfig.github.owner,
-      repo: projectConfig.github.repo,
-      title,
-      body: issueBody,
-      labels: ["from-notion"]
-    });
-
-    console.log(`✅ [${projectId}] Issue creado: #${issue.data.number}`);
-
-    await notion.pages.update({
-      page_id: page.id,
-      properties: {
-        "Estado": { status: { name: "GH ISSUE" } }
+      if (!response?.results?.length) {
+        logger.debug(`[${projectId}] No READY tasks in ${workspace.workspace_id}`);
+        continue;
       }
-    });
+
+      for (const page of response.results) {
+        const title = getTitle(page) || "Nueva tarea";
+        const description = getRichText(page, "Descripcion") || "";
+        const tags = getMultiSelect(page, "Tags") || "";
+        const comments = await getPageComments(notion, page.id);
+
+        const mdBlocks = await n2m.pageToMarkdown(page.id);
+        const mdString = n2m.toMarkdownString(mdBlocks);
+        const fullContent = await processMarkdownImages(mdString.parent || "");
+
+        const issueBody = [
+          `Notion-PageId: ${page.id}`,
+          `Notion-Workspace: ${workspace.workspace_id}`,
+          tags ? `Tags: ${tags}` : null,
+          "",
+          description,
+          "",
+          fullContent,
+          "",
+          comments
+        ].filter(Boolean).join("\n");
+
+        const issue = await octokit.rest.issues.create({
+          owner: projectConfig.github.owner,
+          repo: projectConfig.github.repo,
+          title,
+          body: issueBody,
+          labels: ["from-notion"]
+        });
+
+        logger.info(`✅ [${projectId}] Issue #${issue.data.number} created from Notion`);
+
+        // Actualizar estado en Notion
+        await notion.pages.update({
+          page_id: page.id,
+          properties: {
+            "Estado": { status: { name: "GH ISSUE" } }
+          }
+        });
+      }
+    } catch (error) {
+      logger.error(`[${projectId}] Error processing workspace ${workspace.workspace_id}:`, error.message);
+    }
   }
 }
 
 async function main() {
+  // Inicializar credential manager
+  await notionCredentialsManager.initRedis();
+  
   const projectIds = Object.keys(projects);
   for (const projectId of projectIds) {
     const projectConfig = projects[projectId];
-    if (!projectConfig?.notion?.databaseId) {
-      console.log(`ℹ️ [${projectId}] Sin notion_database_id, se omite.`);
-      continue;
-    }
     try {
       await expandReadyTasksForProject(projectId, projectConfig);
     } catch (err) {
-      console.error(`❌ [${projectId}] Error:`, err.message);
+      logger.error(`❌ [${projectId}] Error:`, err.message);
     }
   }
 }
 
 main().catch(err => {
-  console.error("❌ [CRON] Error fatal:", err.message);
+  logger.error("❌ [CRON] Error fatal:", err.message);
   process.exit(1);
 });

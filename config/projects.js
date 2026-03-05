@@ -8,9 +8,8 @@ function buildProjectConfig(id, options) {
       owner: options.githubOwner,
       repo: options.githubRepo
     },
-    notion: {
-      databaseId: options.notionDatabaseId
-    },
+    // NOTE: Notion workspaces are now loaded dynamically from Supabase
+    // See: services/notionCredentialsManager.js
     repoPath: options.repoPath,
     worktreeRoot: options.worktreeRoot,
     models: {
@@ -34,7 +33,6 @@ const projects = {
     name: process.env.PROJECT_1_NAME || "Proyecto 1",
     githubOwner: process.env.PROJECT_1_GITHUB_OWNER || "zalazarnatanael",
     githubRepo: process.env.PROJECT_1_GITHUB_REPO || "v0-ferreteria",
-    notionDatabaseId: process.env.PROJECT_1_NOTION_DATABASE_ID || process.env.NOTION_DATABASE_ID,
     repoPath: process.env.PROJECT_1_REPO_PATH || process.env.REPO_PATH,
     worktreeRoot: process.env.PROJECT_1_WORKTREE_ROOT || process.env.WORKTREE_ROOT,
     planModelSimple: process.env.PROJECT_1_PLAN_MODEL_SIMPLE || process.env.PLANNER_MODEL || "opencode/trinity-large-preview-free",
@@ -49,7 +47,6 @@ const projects = {
     name: process.env.PROJECT_2_NAME || "Proyecto 2",
     githubOwner: process.env.PROJECT_2_GITHUB_OWNER,
     githubRepo: process.env.PROJECT_2_GITHUB_REPO,
-    notionDatabaseId: process.env.PROJECT_2_NOTION_DATABASE_ID,
     repoPath: process.env.PROJECT_2_REPO_PATH,
     worktreeRoot: process.env.PROJECT_2_WORKTREE_ROOT,
     planModelSimple: process.env.PROJECT_2_PLAN_MODEL_SIMPLE || process.env.PLANNER_MODEL || "opencode/trinity-large-preview-free",
@@ -64,7 +61,6 @@ const projects = {
     name: process.env.PROJECT_3_NAME || "Proyecto 3",
     githubOwner: process.env.PROJECT_3_GITHUB_OWNER,
     githubRepo: process.env.PROJECT_3_GITHUB_REPO,
-    notionDatabaseId: process.env.PROJECT_3_NOTION_DATABASE_ID,
     repoPath: process.env.PROJECT_3_REPO_PATH,
     worktreeRoot: process.env.PROJECT_3_WORKTREE_ROOT,
     planModelSimple: process.env.PROJECT_3_PLAN_MODEL_SIMPLE || process.env.PLANNER_MODEL || "opencode/trinity-large-preview-free",
@@ -79,7 +75,6 @@ const projects = {
     name: process.env.PROJECT_4_NAME || "Proyecto 4",
     githubOwner: process.env.PROJECT_4_GITHUB_OWNER,
     githubRepo: process.env.PROJECT_4_GITHUB_REPO,
-    notionDatabaseId: process.env.PROJECT_4_NOTION_DATABASE_ID,
     repoPath: process.env.PROJECT_4_REPO_PATH,
     worktreeRoot: process.env.PROJECT_4_WORKTREE_ROOT,
     planModelSimple: process.env.PROJECT_4_PLAN_MODEL_SIMPLE || process.env.PLANNER_MODEL || "opencode/trinity-large-preview-free",

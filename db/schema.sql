@@ -66,3 +66,40 @@ CREATE TABLE IF NOT EXISTS plan_history (
   attempt_number INTEGER,
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- ============================================================================
+-- NOTION WORKSPACES: Multi-workspace support (N:M relationships)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS notion_workspaces (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  workspace_id TEXT UNIQUE NOT NULL,
+  workspace_name VARCHAR(255) NOT NULL,
+  api_key_encrypted TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  created_by VARCHAR(255),
+  notes TEXT
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_notion_workspace_id ON notion_workspaces(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_notion_active ON notion_workspaces(is_active);
+
+-- ============================================================================
+-- PROJECT-NOTION WORKSPACES: N:M relationship mapping
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS project_notion_workspaces (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  notion_workspace_id TEXT NOT NULL REFERENCES notion_workspaces(workspace_id) ON DELETE CASCADE,
+  database_id VARCHAR(255),
+  is_primary BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(project_id, notion_workspace_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_project_workspaces ON project_notion_workspaces(project_id);
+CREATE INDEX IF NOT EXISTS idx_workspace_projects ON project_notion_workspaces(notion_workspace_id);

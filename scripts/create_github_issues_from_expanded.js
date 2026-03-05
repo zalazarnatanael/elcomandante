@@ -1,6 +1,8 @@
 const { Client } = require("@notionhq/client");
+require("dotenv").config();
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notionCredentialsManager = require("../services/notionCredentialsManager");
+const logger = require("../logger");
 
 const OWNER = process.env.GITHUB_OWNER;
 const REPO = process.env.GITHUB_REPO;
