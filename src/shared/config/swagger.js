@@ -1,5 +1,14 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 
+const port = Number(process.env.PORT || 3000);
+const rawBaseUrl = process.env.API_BASE_URL || '';
+const defaultBaseUrl = `http://localhost:${port}`;
+const apiBaseUrl = rawBaseUrl
+  ? (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(rawBaseUrl)
+    ? rawBaseUrl
+    : `http://${rawBaseUrl}`)
+  : defaultBaseUrl;
+
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
@@ -8,7 +17,7 @@ const swaggerDefinition = {
     description: 'Admin/dashboard API for OpenClaw operations'
   },
   servers: [
-    { url: 'http://localhost:3000', description: 'Local' }
+    { url: apiBaseUrl, description: 'API' }
   ],
   components: {
     securitySchemes: {

@@ -11,9 +11,21 @@ const router = express.Router();
  *     summary: Admin dashboard summary
  *     tags:
  *       - Admin
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Summary metrics
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   counts:
+  *                     projects: 4
+  *                     workspaces: 2
+  *                     developers: 2
+  *                     tasks: 12
  */
 router.get('/summary', requireRole(['admin', 'viewer']), controller.getDashboardSummary);
 

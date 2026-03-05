@@ -13,9 +13,20 @@ const router = express.Router();
  *     summary: List Notion workspaces
  *     tags:
  *       - Workspaces
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of workspaces
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   - workspace_id: "ws-1"
+  *                     workspace_name: "Main Workspace"
+  *                     is_active: true
+  *                     notes: "Prod - Ferreteria + Ecommerce"
  */
 router.get('/', requireRole(['admin', 'viewer']), controller.listWorkspaces);
 
@@ -26,6 +37,8 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listWorkspaces);
  *     summary: Get Notion workspace
  *     tags:
  *       - Workspaces
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -35,6 +48,15 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listWorkspaces);
  *     responses:
  *       200:
  *         description: Workspace
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   workspace_id: "ws-1"
+  *                   workspace_name: "Main Workspace"
+  *                   is_active: true
+  *                   notes: "Prod - Ferreteria + Ecommerce"
  */
 router.get('/:id', requireRole(['admin', 'viewer']), validate(getWorkspaceSchema), controller.getWorkspace);
 
@@ -45,6 +67,8 @@ router.get('/:id', requireRole(['admin', 'viewer']), validate(getWorkspaceSchema
  *     summary: Create Notion workspace
  *     tags:
  *       - Workspaces
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -71,6 +95,8 @@ router.post('/', requireRole(['admin']), validate(createWorkspaceSchema), contro
  *     summary: Update Notion workspace
  *     tags:
  *       - Workspaces
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -80,6 +106,15 @@ router.post('/', requireRole(['admin']), validate(createWorkspaceSchema), contro
  *     responses:
  *       200:
  *         description: Workspace updated
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   workspace_id: "ws-1"
+  *                   workspace_name: "Main Workspace"
+  *                   is_active: true
+  *                   notes: "Prod - Ferreteria + Ecommerce"
  */
 router.put('/:id', requireRole(['admin']), validate(updateWorkspaceSchema), controller.updateWorkspace);
 
@@ -90,6 +125,8 @@ router.put('/:id', requireRole(['admin']), validate(updateWorkspaceSchema), cont
  *     summary: Delete Notion workspace
  *     tags:
  *       - Workspaces
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

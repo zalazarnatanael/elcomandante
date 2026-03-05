@@ -13,9 +13,22 @@ const router = express.Router();
  *     summary: List projects
  *     tags:
  *       - Projects
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of projects
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   - id: "proyecto-1"
+  *                     name: "Ferreteria"
+  *                     github_owner: "acme"
+  *                     github_repo: "ferreteria"
+  *                     notion_database_id: "db-ferreteria-1"
+  *                     is_active: true
  */
 router.get('/', requireRole(['admin', 'viewer']), controller.listProjects);
 
@@ -26,6 +39,8 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listProjects);
  *     summary: Get project by id
  *     tags:
  *       - Projects
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -35,6 +50,17 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listProjects);
  *     responses:
  *       200:
  *         description: Project
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   id: "proyecto-1"
+  *                   name: "Ferreteria"
+  *                   github_owner: "acme"
+  *                   github_repo: "ferreteria"
+  *                   notion_database_id: "db-ferreteria-1"
+  *                   is_active: true
  */
 router.get('/:id', requireRole(['admin', 'viewer']), validate(getProjectSchema), controller.getProject);
 
@@ -45,6 +71,8 @@ router.get('/:id', requireRole(['admin', 'viewer']), validate(getProjectSchema),
  *     summary: Create project
  *     tags:
  *       - Projects
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -72,6 +100,8 @@ router.post('/', requireRole(['admin']), validate(createProjectSchema), controll
  *     summary: Update project
  *     tags:
  *       - Projects
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -81,6 +111,17 @@ router.post('/', requireRole(['admin']), validate(createProjectSchema), controll
  *     responses:
  *       200:
  *         description: Project updated
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   id: "proyecto-1"
+  *                   name: "Ferreteria"
+  *                   github_owner: "acme"
+  *                   github_repo: "ferreteria"
+  *                   notion_database_id: "db-ferreteria-1"
+  *                   is_active: true
  */
 router.put('/:id', requireRole(['admin']), validate(updateProjectSchema), controller.updateProject);
 
@@ -91,6 +132,8 @@ router.put('/:id', requireRole(['admin']), validate(updateProjectSchema), contro
  *     summary: Delete project
  *     tags:
  *       - Projects
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

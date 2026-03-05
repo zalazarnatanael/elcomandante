@@ -13,9 +13,20 @@ const router = express.Router();
  *     summary: List developers
  *     tags:
  *       - Developers
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of developers
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   - github_username: "dev-1"
+  *                     commit_name: "Dev One"
+  *                     commit_email: "dev-1@users.noreply.github.com"
+  *                     is_active: true
  */
 router.get('/', requireRole(['admin', 'viewer']), controller.listDevelopers);
 
@@ -26,6 +37,8 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listDevelopers);
  *     summary: Get developer by username
  *     tags:
  *       - Developers
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: username
@@ -35,6 +48,15 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listDevelopers);
  *     responses:
  *       200:
  *         description: Developer
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   github_username: "dev-1"
+  *                   commit_name: "Dev One"
+  *                   commit_email: "dev-1@users.noreply.github.com"
+  *                   is_active: true
  */
 router.get('/:username', requireRole(['admin', 'viewer']), validate(getDeveloperSchema), controller.getDeveloper);
 
@@ -45,6 +67,8 @@ router.get('/:username', requireRole(['admin', 'viewer']), validate(getDeveloper
  *     summary: Create or update developer
  *     tags:
  *       - Developers
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -62,6 +86,15 @@ router.get('/:username', requireRole(['admin', 'viewer']), validate(getDeveloper
  *     responses:
  *       200:
  *         description: Developer upserted
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   github_username: "dev-1"
+  *                   commit_name: "Dev One"
+  *                   commit_email: "dev-1@users.noreply.github.com"
+  *                   is_active: true
  */
 router.post('/', requireRole(['admin']), validate(upsertDeveloperSchema), controller.upsertDeveloper);
 
@@ -72,6 +105,8 @@ router.post('/', requireRole(['admin']), validate(upsertDeveloperSchema), contro
  *     summary: Update developer
  *     tags:
  *       - Developers
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: username
@@ -81,6 +116,15 @@ router.post('/', requireRole(['admin']), validate(upsertDeveloperSchema), contro
  *     responses:
  *       200:
  *         description: Developer updated
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   github_username: "dev-1"
+  *                   commit_name: "Dev One"
+  *                   commit_email: "dev-1@users.noreply.github.com"
+  *                   is_active: true
  */
 router.put('/:username', requireRole(['admin']), validate(upsertDeveloperSchema), controller.upsertDeveloper);
 
@@ -91,6 +135,8 @@ router.put('/:username', requireRole(['admin']), validate(upsertDeveloperSchema)
  *     summary: Delete developer
  *     tags:
  *       - Developers
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: username

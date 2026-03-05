@@ -11,9 +11,16 @@ const router = express.Router();
  *     summary: GitHub webhook (default project)
  *     tags:
  *       - Webhooks
+ *     security: []
  *     responses:
  *       200:
  *         description: OK
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   ok: true
  */
 router.post('/', verifyGithubSignature, controller.handleWebhook);
 
@@ -24,6 +31,7 @@ router.post('/', verifyGithubSignature, controller.handleWebhook);
  *     summary: GitHub webhook (project override)
  *     tags:
  *       - Webhooks
+ *     security: []
  *     parameters:
  *       - in: path
  *         name: projectId
@@ -33,6 +41,12 @@ router.post('/', verifyGithubSignature, controller.handleWebhook);
  *     responses:
  *       200:
  *         description: OK
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   ok: true
  */
 router.post('/:projectId', verifyGithubSignature, controller.handleWebhook);
 

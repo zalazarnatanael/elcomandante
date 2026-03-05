@@ -13,6 +13,8 @@ const router = express.Router();
  *     summary: List project-workspace mappings
  *     tags:
  *       - ProjectWorkspaces
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: projectId
@@ -22,6 +24,16 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: List of mappings
+  *         content:
+  *           application/json:
+  *             examples:
+  *               success:
+  *                 value:
+  *                   - id: "pw-1"
+  *                     project_id: "proyecto-1"
+  *                     notion_workspace_id: "ws-1"
+  *                     database_id: "db-ferreteria-1"
+  *                     is_primary: true
  */
 router.get('/', requireRole(['admin', 'viewer']), controller.listProjectWorkspaces);
 
@@ -32,6 +44,8 @@ router.get('/', requireRole(['admin', 'viewer']), controller.listProjectWorkspac
  *     summary: Create project-workspace mapping
  *     tags:
  *       - ProjectWorkspaces
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -57,6 +71,8 @@ router.post('/', requireRole(['admin']), validate(createProjectWorkspaceSchema),
  *     summary: Delete project-workspace mapping
  *     tags:
  *       - ProjectWorkspaces
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

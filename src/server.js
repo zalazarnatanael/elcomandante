@@ -11,6 +11,7 @@ const taskRoutes = require('./features/tasks/task.routes');
 const developerRoutes = require('./features/developers/developer.routes');
 const adminRoutes = require('./features/admin/admin.routes');
 const webhookRoutes = require('./features/webhooks/webhook.routes');
+const authRoutes = require('./features/auth/auth.routes');
 const webhookService = require('./features/webhooks/webhook.service');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerSpec } = require('./shared/config/swagger');
@@ -22,7 +23,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
-  'https://v0-git-hub-bot-dashboard.vercel.app'
+  'https://v0-git-hub-bot-dashboard.vercel.app',
+  process.env.API_BASE_URL,
+  process.env.FRONTEND_URL
 ];
 
 app.use(cors({
@@ -60,9 +63,12 @@ app.use((req, res, next) => {
   if (req.path === '/health') return next();
   if (req.path.startsWith('/uploads')) return next();
   if (req.path.startsWith('/docs')) return next();
+  if (req.path.startsWith('/auth')) return next();
+  if (req.path.startsWith('/api/auth')) return next();
   return supabaseAuthMiddleware()(req, res, next);
 });
 
+app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/project-workspaces', projectWorkspaceRoutes);
